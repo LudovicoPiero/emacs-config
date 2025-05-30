@@ -113,6 +113,10 @@
     "f r" '(consult-recent-file :wk "Find recent files")
     "f f" '(lsp-format-buffer :wk "LSP Format buffer"))
 
+  (airi/leader-keys
+    "g" '(:ignore t :wk "Magit")
+    "g g" '(magit-status :wk "Open magit status"))
+
  (airi/leader-keys
     "h" '(:ignore t :wk "Help")
     "h f" '(describe-function :wk "Describe function")
@@ -132,7 +136,8 @@
     "s" '(:ignore t :wk "Search")
     "s b" '(consult-project-buffer :wk "Search buffers")
     "s f" '(project-find-file :wk "Search find")
-    "s g" '(consult-ripgrep :wk "Search grep")
+    "s g" '(consult-ripgrep :wk "Search grep using consult-ripgrep")
+    "s G" '(deadgrep :wk "Search grep using Deadgrep")
     "s m" '(consult-man :wk "Search man")
     "s r" '(consult-recent-file :wk "Search recent files"))
 

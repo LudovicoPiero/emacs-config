@@ -29,6 +29,9 @@
 (use-package magit)
 
 (use-package elcord
+  :config
+  (setq elcord-quiet t)
+
   :init
   (elcord-mode))
 

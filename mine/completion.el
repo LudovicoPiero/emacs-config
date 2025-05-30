@@ -1,4 +1,4 @@
-;;; completions.el --- Completion packages -*- lexical-binding: t -*-
+;;; completion.el --- Completion packages -*- lexical-binding: t -*-
 
 ;; Author: Ludovico Piero <lewdovico@gnuweeb.org>
 ;; Version: 0.0.1
@@ -20,17 +20,7 @@
 
 ;;; Commentary:
 
-;; This module configures Emacs completion systems using modern packages:
-;;
-;; - `corfu` provides in-buffer popup completion menus with extensive customization.
-;; - `tempel` offers a minimal yet flexible template/snippet system for code insertion.
-;; - `cape` enhances `completion-at-point-functions` with various additional backends.
-;;
-;; It also integrates Corfu with LSP, configures useful behavior for manual
-;; and automatic completions, and binds some helpful keys for Tempel templates.
-;;
-;; This file is intended to be modular and works as part of a larger Emacs
-;; configuration organized by topic.
+;; TODO
 
 ;;; Code:
 
@@ -144,6 +134,21 @@
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
 
+(use-package vertico
+  :ensure t
+  :defer t
+  :commands vertico-mode
+  :hook (after-init . vertico-mode))
 
-(provide 'completions)
-;;; completions.el ends here
+(use-package orderless
+  ;; Vertico leverages Orderless' flexible matching capabilities, allowing users
+  ;; to input multiple patterns separated by spaces, which Orderless then
+  ;; matches in any order against the candidates.
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
+
+(provide 'completion)
+;;; completion.el ends here

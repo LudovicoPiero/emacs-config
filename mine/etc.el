@@ -20,33 +20,17 @@
 
 ;;; Commentary:
 
-;; This file sets up general-purpose packages such as
-;; Magit, Vertico stack (Orderless, Embark, Marginalia, Consult),
-;; buffer naming with Uniquify, and trailing whitespace cleanup.
+;; TODO
 
 ;;; Code:
 
 (use-package diminish)
-
-;;; Magit ;;;
+(use-package deadgrep)
 (use-package magit)
 
-;;;;;; Vertico ;;;;;;;;;
-(use-package vertico
-  :ensure t
-  :defer t
-  :commands vertico-mode
-  :hook (after-init . vertico-mode))
-
-(use-package orderless
-  ;; Vertico leverages Orderless' flexible matching capabilities, allowing users
-  ;; to input multiple patterns separated by spaces, which Orderless then
-  ;; matches in any order against the candidates.
-  :ensure t
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion)))))
+(use-package elcord
+  :init
+  (elcord-mode))
 
 (use-package marginalia
   ;; Marginalia allows Embark to offer you preconfigured actions in more contexts.

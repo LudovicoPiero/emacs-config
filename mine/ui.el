@@ -20,8 +20,7 @@
 
 ;;; Commentary:
 
-;; This file configures the visual theming and UI enhancements for Emacs,
-;; focusing on a modern, polished, and visually consistent experience.
+;; TODO
 
 ;;; Code:
 
@@ -54,14 +53,40 @@
 
 (use-package rainbow-mode
   :diminish
-  :hook org-mode prog-mode)
+  :hook
+  ((org-mode prog-mode) . rainbow-mode))
+(use-package rainbow-delimiters
+  :diminish
+  :hook ((prog-mode . rainbow-delimiters-mode)))
 
 (use-package all-the-icons
   :ensure t
   :if (display-graphic-p))
-
 (use-package all-the-icons-dired
   :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
+
+(use-package centered-cursor-mode
+  :diminish centered-cursor-mode
+  :config (global-centered-cursor-mode))
+
+(use-package dired-open
+  :config
+  ;; Customize file associations for opening files in Dired
+  (setq dired-open-extensions '(("gif" . "imv")
+                                ("jpg" . "imv")
+                                ("png" . "imv")
+                                ("mkv" . "mpv")
+                                ("mp4" . "mpv"))))
+
+(use-package peep-dired
+  :after dired
+  :hook (evil-normalize-keymaps . peep-dired-hook)
+  :config
+  ;; Customize key bindings for peep-dired
+  (evil-define-key 'normal dired-mode-map (kbd "h") 'dired-up-directory)
+  (evil-define-key 'normal dired-mode-map (kbd "l") 'dired-open-file) ; use dired-find-file instead if not using dired-open package
+  (evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file)
+  (evil-define-key 'normal peep-dired-mode-map (kbd "k") 'peep-dired-prev-file))
 
 (use-package kind-icon
   :after corfu
@@ -88,7 +113,5 @@
           ("NOTE"       success bold)
           ("DEPRECATED" font-lock-doc-face bold))))
 
-(use-package peep-dired)
-
 (provide 'themes)
-;;; themes.el ends here
+;;; ui.el ends here

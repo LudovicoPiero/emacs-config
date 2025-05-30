@@ -1,4 +1,4 @@
-;;; org.el --- ORG Configuration -*- lexical-binding: t -*-
+;;; org.el --- ORG Mode Configuration -*- lexical-binding: t -*-
 
 ;; Author: Ludovico Piero <lewdovico@gnuweeb.org>
 ;; Version: 0.0.1
@@ -20,10 +20,7 @@
 
 ;;; Commentary:
 
-;; This file configures `org-mode` for a modern, visually clean, and
-;; Evil-friendly Org experience. It enhances both the aesthetics and
-;; editing ergonomics of Org documents, while remaining minimal and
-;; extensible.
+;; TODO
 
 ;;; Code:
 
@@ -57,6 +54,13 @@
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
+
+(use-package toc-org
+  :commands toc-org-enable
+  :hook (org-mode . toc-org-enable))
+
+(use-package org-bullets
+  :hook (org-mode . (lambda () (org-bullets-mode 1))))
 
 (provide 'org)
 ;;; org.el ends here

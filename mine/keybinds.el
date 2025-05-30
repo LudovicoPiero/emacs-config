@@ -24,85 +24,39 @@
 ;; primarily structured around Evil-mode (Vim emulation) and the General
 ;; package for concise and expressive keybinding definitions.
 
-;; Key features:
-;; - `evil` is configured with sane defaults, undo-fu integration, and
-;;   `evil-surround` for classic Vim-style surround editing.
-;; - `evil-collection` ensures Evil integration across standard Emacs packages.
-;; - `vim-tab-bar` enhances the tab-bar UI to resemble Vim's tab behavior.
-;; - Custom comment operator (`gc`) mirrors Vim's common comment motion.
-;; - The `general` package defines a leader key (`SPC`) across all Evil states,
-;;   providing a consistent and discoverable keybinding layout via which-key.
-;; - Keybindings are grouped by domain (buffers, Dired, eval, help, org,
-;;   search, windows) and annotated with `which-key` descriptions for clarity.
-;; - Undo history is enhanced with `undo-fu` and session persistence via
-;;   `undo-fu-session`.
-;; - `which-key` improves discoverability of leader-key shortcuts.
-;; - Pixel-precision scrolling is enabled where appropriate, except on
-;;   emacs-mac builds.
-
-;; This configuration is modular, lazy-loaded where possible, and tuned for
-;; performance and ergonomics.
-
 ;;; Code:
 
 ;; Required by evil-collection
-(eval-when-compile
-  ;; It has to be defined before evil
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil))
-
-;; Uncomment the following if you are using undo-fu
-(setq evil-undo-system 'undo-fu)
-
-;; Vim emulation
 (use-package evil
-  :ensure t
-  :defer t
-  :commands (evil-mode evil-define-key)
-  :hook (after-init . evil-mode))
+  :init
+  ;; tweak evil's configuration before loading it
+  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
+  (setq evil-vsplit-window-right t)
+  (setq evil-split-window-below t)
 
-(eval-when-compile
-  ;; It has to be defined before evil-colllection
-  (setq evil-collection-setup-minibuffer t))
+  (evil-mode))
 
 (use-package evil-collection
   :after evil
-  :ensure t
+  :diminish
   :config
+  (setq evil-collection-mode-list '(dashboard dired ibuffer magit vterm))
   (evil-collection-init))
-
-;; Give Emacs tab-bar a style similar to Vim's
-(use-package vim-tab-bar
-  :ensure t
-  :commands vim-tab-bar-mode
-  :hook (after-init . vim-tab-bar-mode))
 
 (use-package evil-surround
   :after evil
+  :diminish
   :ensure t
-  :defer t
-  :commands global-evil-surround-mode
-  :custom
-  (evil-surround-pairs-alist
-   '((?\( . ("(" . ")"))
-     (?\[ . ("[" . "]"))
-     (?\{ . ("{" . "}"))
+  :config
+  (global-evil-surround-mode 1))
 
-     (?\) . ("(" . ")"))
-     (?\] . ("[" . "]"))
-     (?\} . ("{" . "}"))
+(use-package evil-nerd-commenter
+  :after evil
+  :diminish)
 
-     (?< . ("<" . ">"))
-     (?> . ("<" . ">"))))
-  :hook (after-init . global-evil-surround-mode))
-
-;; Comment with `gcc` in normal mode
-(with-eval-after-load "evil"
-  (evil-define-operator my-evil-comment-or-uncomment (beg end)
-    "Toggle comment for the region between BEG and END."
-    (interactive "<r>")
-    (comment-or-uncomment-region beg end))
-  (evil-define-key 'normal 'global (kbd "gc") 'my-evil-comment-or-uncomment))
+;; Setting RETURN key in org-mode to follow links
+(setq org-return-follows-link t)
 
 (use-package general
   :init
@@ -123,7 +77,7 @@
     :global-prefix "M-SPC") ;; access leader in insert mode
 
   (airi/leader-keys
-    "SPC" '(counsel-M-x :wk "Counsel M-x")
+    "SPC" '(consult-project-buffer :wk "Consult project buffer")
     "." '(find-file :wk "Find file")
     "TAB TAB" '(comment-line :wk "Comment lines"))
 
@@ -148,16 +102,15 @@
     "e b" '(eval-buffer :wk "Evaluate elisp in buffer")
     "e d" '(eval-defun :wk "Evaluate defun containing or after point")
     "e e" '(eval-expression :wk "Evaluate and elisp expression")
-    "e h" '(counsel-esh-history :wk "EShell history")
     "e l" '(eval-last-sexp :wk "Evaluate elisp expression before point")
     "e r" '(eval-region :wk "Evaluate elisp in region")
     "e R" '(eww-reload :which-key "Reload current page in EWW")
     "e s" '(eshell :which-key "Eshell")
     "e w" '(eww :which-key "EWW emacs web wowser"))
-  
+
   (airi/leader-keys
     "f" '(:ignore t :wk "Format")
-    "f r" '(counsel-recentf :wk "Find recent files")
+    "f r" '(consult-recent-file :wk "Find recent files")
     "f f" '(lsp-format-buffer :wk "LSP Format buffer"))
 
  (airi/leader-keys
@@ -174,7 +127,7 @@
     "m t" '(org-todo :wk "Org todo")
     "m B" '(org-babel-tangle :wk "Org babel tangle")
     "m T" '(org-todo-list :wk "Org todo list"))
-  
+
   (airi/leader-keys
     "s" '(:ignore t :wk "Search")
     "s b" '(consult-project-buffer :wk "Search buffers")

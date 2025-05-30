@@ -16,11 +16,9 @@ If this enhances your workflow, please show your support by **⭐ starring minim
 
 The **minimal-emacs.d** project is a lightweight Emacs starter (`init.el` and `early-init.el`) that **avoids the complexity of Doom Emacs or Spacemacs**, while providing a solid, optimized baseline for your configuration.
 
-The *minimal-emacs.d* project is:
-- **Minimal yet effective:** A solid starting point.
-- **Better defaults:** Improved settings for usability, UI, garbage collection, and built-in packages.
-- **0 packages loaded / No forced modes:** Unlike other frameworks or starter kits, *minimal-emacs.d* does not impose modes or require packages. **You have full control** over which global or minor modes to enable and which packages to load.
-- **Customizable foundation:** Designed to be extended, not replaced. This README.md offers extensive recommendations for customizing your *minimal-emacs.d* configuration. (Reminder: [Never modify init.el and early-init.el. Modify these instead...](#customizations-never-modify-initel-and-early-initel-modify-these-instead))
+The **minimal-emacs.d** project is a lightweight Emacs starter (`init.el` and `early-init.el`) that **avoids the complexity of Doom Emacs or Spacemacs**, while providing a solid, optimized baseline for your configuration.
+
+It includes:
 
 - `early-init.el`: Loaded before the GUI and packages are initialized. Great for setting up performance-related and UI-related parameters.
 - `init.el`: Loaded after GUI init, used for personal package loading, keybindings, and mode configurations.
@@ -30,7 +28,7 @@ It is:
 - **Customizable:** Designed to be extended, not replaced.
 - **Fast:** Startup performance is a primary goal.
 
-Emacs comes with many well-designed defaults, but it also retains some less-than-ideal settings, often due to historical constraints or legacy compatibility. The purpose of *minimal-emacs.d* is to offer refined defaults that improve both usability and performance, replacing long-standing Emacs settings that no longer serve modern workflows well.
+## Customizations
 
 All user-specific settings and additions in this configuration are layered **on top of** the original `minimal-emacs.d` core. That means:
 - The core `init.el` and `early-init.el` are retained as upstream base files (or adapted directly if needed).

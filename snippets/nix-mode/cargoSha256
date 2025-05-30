@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Insert CargoSha256 template
+# key: chs
+# --
+cargoSha256 = "0000000000000000000000000000000000000000000000000000";

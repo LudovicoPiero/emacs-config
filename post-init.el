@@ -169,38 +169,10 @@
   (electric-indent-mode -1)
 
   ;; Enable automatic closing of paired characters
-  (electric-pair-mode 1)
-
-  ;; Unmap RET, TAB, SPC in Evil motion state to allow Org to override
-  (with-eval-after-load 'evil-maps
-    (define-key evil-motion-state-map (kbd "SPC") nil)
-    (define-key evil-motion-state-map (kbd "RET") nil)
-    (define-key evil-motion-state-map (kbd "TAB") nil))
-
-  ;; Add a hook to run code after Emacs has fully initialized
-  (add-hook 'after-init-hook
-            (lambda ()
-              (message "Emacs has fully loaded. This code runs after startup.")
-
-              ;; Insert a welcome message in the *scratch* buffer displaying loading time and package count
-              (with-current-buffer (get-buffer-create "*scratch*")
-                (insert (format
-                         ";;    Welcome to Emacs!
-;;
-;;    Loading time : %s
-;;    Packages     : %s
-"
-                         (emacs-init-time)
-                         (number-to-string (length package-activated-list))))))))
+  (electric-pair-mode 1))
 
 (let ((mine-dir (expand-file-name "mine" "~/.emacs.d")))
   (dolist (file (directory-files mine-dir t "\\.el\\'"))
     (minimal-emacs-load-user-init file)))
-;; (minimal-emacs-load-user-init "mine/completions.el")
-;; (minimal-emacs-load-user-init "mine/etc.el") ;; General packages goes here
-;; (minimal-emacs-load-user-init "mine/keybinds.el")
-;; (minimal-emacs-load-user-init "mine/lsp.el")
-;; (minimal-emacs-load-user-init "mine/org.el")
-;; (minimal-emacs-load-user-init "mine/ui.el")
 
 ;;; post-init.el ends here

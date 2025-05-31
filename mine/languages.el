@@ -27,7 +27,8 @@
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
   :init
-  (setq lsp-keymap-prefix "C-c l")
+  (setq lsp-keymap-prefix "C-c l"
+        lsp-enable-suggest-server-download nil) ;; disable server downloading suggestions
   :hook (lsp-mode . lsp-enable-which-key-integration))
 
 (use-package lsp-ui

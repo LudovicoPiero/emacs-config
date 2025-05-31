@@ -54,10 +54,39 @@
 (add-hook 'sh-mode-hook #'flycheck-mode)
 
 ;; Nix
+(defun +nix-shell-init-mode ()
+  "Resolve a (cached-)?nix-shell shebang to the correct major mode."
+  (save-excursion
+    (goto-char (point-min))
+    (save-match-data
+      (if (not (and (re-search-forward "\\_<nix-shell " (line-end-position 2) t)
+                    (re-search-forward "-i +\"?\\([^ \"\n]+\\)" (line-end-position) t)))
+          (message "Couldn't determine mode for this script")
+        (let* ((interp (match-string 1))
+               (mode
+                (assoc-default
+                 interp
+                 (mapcar (lambda (e)
+                           (cons (format "\\`%s\\'" (car e))
+                                 (cdr e)))
+                         interpreter-mode-alist)
+                 #'string-match-p)))
+          (when mode
+            (funcall mode)
+            (when (eq major-mode 'sh-mode)
+              (sh-set-shell interp))
+            ;; Prevent tools like quickrun from trying to use the shebang interpreter directly
+            (setq-local quickrun-option-shebang nil)))))))
+
 (use-package nix-mode
   :ensure t
   :mode "\\.nix\\'"
-  :hook (nix-mode . eglot-ensure))
+  :interpreter ("\\(?:cached-\\)?nix-shell" . +nix-shell-init-mode))
+;; Optional: Associate flake.lock with JSON mode
+(add-to-list 'auto-mode-alist '("/flake\\.lock\\'" . json-mode))
+
+(use-package nix-update
+  :commands nix-update-fetch)
 
 ;; Python
 (use-package python

@@ -68,8 +68,6 @@
   :config (global-centered-cursor-mode))
 
 (use-package kind-icon
-  :after corfu
-
   :custom
   (kind-icon-use-icons t)
   (kind-icon-default-face 'corfu-default) ; Have background color be the same as `corfu' face background

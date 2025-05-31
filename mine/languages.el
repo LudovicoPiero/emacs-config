@@ -24,36 +24,23 @@
 
 ;;; Code:
 
-(use-package eglot
-  :ensure t
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (lsp-mode . lsp-enable-which-key-integration))
 
-  :custom
-  (eglot-autoshutdown t)
+(use-package lsp-ui
+ :commands lsp-ui-mode)
 
-  :config
-  ;; Nix LSP server
-  (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
-  ;; Python: using basedpyright (you could swap with ruff-lsp if desired)
-  (add-to-list 'eglot-server-programs '(python-ts-mode . ("basedpyright")))
-  ;; Rust: using rust-analyzer
-  (add-to-list 'eglot-server-programs '(rust-ts-mode . ("rust-analyzer")))
-  ;; JavaScript / ESLint
-  (add-to-list 'eglot-server-programs '(js-ts-mode . ("vscode-eslint-language-server" "--stdio")))
-  ;; TypeScript
-  (add-to-list 'eglot-server-programs '(typescript-ts-mode . ("typescript-language-server" "--stdio")))
-  ;; (Optional) For CSS and HTML, you can add a stylelint server:
-  (add-to-list 'eglot-server-programs '(css-mode . ("vscode-stylelint" "--stdio")))
-  (add-to-list 'eglot-server-programs '(web-mode . ("vscode-stylelint" "--stdio"))))
-
+;; Major mode remapping: same as eglot
 (setq major-mode-remap-alist
       '((python-mode . python-ts-mode)
         (rust-mode . rust-ts-mode)
         (js-mode . js-ts-mode)
         (typescript-mode . typescript-ts-mode)))
 
-(add-hook 'sh-mode-hook #'flycheck-mode)
-
-;; Nix
+;; Nix shell interpreter detection
 (defun +nix-shell-init-mode ()
   "Resolve a (cached-)?nix-shell shebang to the correct major mode."
   (save-excursion
@@ -75,24 +62,24 @@
             (funcall mode)
             (when (eq major-mode 'sh-mode)
               (sh-set-shell interp))
-            ;; Prevent tools like quickrun from trying to use the shebang interpreter directly
             (setq-local quickrun-option-shebang nil)))))))
 
 (use-package nix-mode
   :ensure t
   :mode "\\.nix\\'"
+  :hook (nix-mode . lsp-deferred)
   :interpreter ("\\(?:cached-\\)?nix-shell" . +nix-shell-init-mode))
-;; Optional: Associate flake.lock with JSON mode
+
 (add-to-list 'auto-mode-alist '("/flake\\.lock\\'" . json-mode))
 
 (use-package nix-update
   :commands nix-update-fetch)
 
-;; Python
+;; Python setup
 (use-package python
   :ensure nil
   :mode ("\\.py\\'" . python-ts-mode)
-  :hook (python-ts-mode . eglot-ensure))
+  :hook (python-ts-mode . lsp-deferred))
 
 (with-eval-after-load 'flycheck
   (flycheck-define-checker python-ruff
@@ -103,23 +90,17 @@
     :modes (python-ts-mode))
   (add-to-list 'flycheck-checkers 'python-ruff))
 
-;; Rust
+;; Rust setup
 (use-package rust-mode
   :ensure nil
   :mode ("\\.rs\\'" . rust-ts-mode)
-  :hook (rust-ts-mode . eglot-ensure))
-
-(with-eval-after-load 'eglot
-  ;; Tell rust-analyzer to run clippy on save.
-  (setq eglot-workspace-configuration
-        '((:rust-analyzer .
-           ((checkOnSave . (:command "clippy")))))))
+  :hook (rust-ts-mode . lsp-deferred))
 
 ;; Web development
 (use-package web-mode
   :ensure t
   :mode ("\\.html?\\'" "\\.php\\'")
-  :hook (web-mode . eglot-ensure)
+  :hook (web-mode . lsp-deferred)
   :config
   (setq web-mode-enable-current-column-highlight t
         web-mode-enable-current-element-highlight t
@@ -130,19 +111,19 @@
 (use-package css-mode
   :ensure nil
   :mode "\\.css\\'"
-  :hook (css-mode . eglot-ensure))
+  :hook (css-mode . lsp-deferred))
 
 (use-package js
   :ensure nil
   :mode ("\\.js\\'" . js-ts-mode)
-  :hook (js-ts-mode . eglot-ensure)
+  :hook (js-ts-mode . lsp-deferred)
   :config
   (setq js-indent-level 2))
 
 (use-package typescript-mode
   :ensure nil
   :mode ("\\.ts\\'" . typescript-ts-mode)
-  :hook (typescript-ts-mode . eglot-ensure)
+  :hook (typescript-ts-mode . lsp-deferred)
   :config
   (setq typescript-indent-level 2))
 

@@ -140,7 +140,8 @@
     "s g" '(consult-ripgrep :wk "Search grep using consult-ripgrep")
     "s G" '(deadgrep :wk "Search grep using Deadgrep")
     "s m" '(consult-man :wk "Search man")
-    "s r" '(consult-recent-file :wk "Search recent files"))
+    "s r" '(consult-recent-file :wk "Search recent files")
+    "s t" '(hl-todo-rgrep :wk "Search TODO"))
 
   (airi/leader-keys
     "w" '(:ignore t :wk "Windows")

@@ -28,6 +28,7 @@
 
 (use-package direnv
   :config
+  (setq direnv-always-show-summary nil)
   ;; Enable direnv mode globally
   (direnv-mode))
 

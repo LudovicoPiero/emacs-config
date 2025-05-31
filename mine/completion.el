@@ -73,7 +73,7 @@
   (corfu-separator ?\s)            ; Use space
   (corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
   (corfu-preview-current 'insert)  ; Preview first candidate. Insert on input if only one
-  (corfu-preselect-first nil)        ; Preselect first candidate?
+  (corfu-preselect-first t)        ; Preselect first candidate?
 
   ;; Other
   (corfu-echo-documentation nil)        ; Already use corfu-doc

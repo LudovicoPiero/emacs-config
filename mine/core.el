@@ -62,13 +62,6 @@
   ;; Display project name in the modeline
   (projectile-mode-line-function '(lambda () (format " Proj[%s]" (projectile-project-name)))))
 
-(use-package undo-tree
-  :ensure t
-  :diminish
-  :config
-  (global-undo-tree-mode)
-  (setq evil-undo-system 'undo-tree))
-
 (use-package which-key
   :ensure t
   :init (which-key-mode)

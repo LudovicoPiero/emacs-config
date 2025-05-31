@@ -175,14 +175,11 @@
 ;; The undo-fu package is a lightweight wrapper around Emacs' built-in undo
 ;; system, providing more convenient undo/redo functionality.
 (use-package undo-fu
-  :defer t
-  :commands (undo-fu-only-undo
-             undo-fu-only-redo
-             undo-fu-only-redo-all
-             undo-fu-disable-checkpoint)
-  :config
+  :ensure t
+  :init
   ;; Increase undo history limits to reduce likelihood of data loss
-  (setq undo-limit 256000           ; 256kb (default is 160kb)
+  (setq evil-undo-system 'undo-fu
+        undo-limit 256000           ; 256kb (default is 160kb)
         undo-strong-limit 2000000   ; 2mb   (default is 240kb)
         undo-outer-limit 36000000)  ; 36mb  (default is 24mb)
 
@@ -193,17 +190,13 @@
 ;; The undo-fu-session package complements undo-fu by enabling the saving
 ;; and restoration of undo history across Emacs sessions, even after restarting.
 (use-package undo-fu-session
-  :defer t
-  :commands undo-fu-session-global-mode
-
-  :config
+  :ensure t
+  :init
   (setq undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
   (when (executable-find "zstd")
-    ;; There are other algorithms available, but zstd is the fastest, and speed
-    ;; is our priority within Emacs
     (setq undo-fu-session-compression 'zst))
-
-  :hook (after-init . undo-fu-session-global-mode))
+  :config
+  (undo-fu-session-global-mode))
 
 (use-package which-key
   :init

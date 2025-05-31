@@ -53,15 +53,14 @@
   (tab-always-indent 'complete)
   (completion-cycle-threshold nil)      ; Always show candidates in menu
 
-  (corfu-auto nil)
+  (corfu-auto t)
   (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.25)
+  (corfu-auto-delay 0.24)
 
-  (corfu-min-width 80)
-  (corfu-max-width corfu-min-width)     ; Always have the same width
-  (corfu-count 14)
+  (corfu-max-width 120)     ; Always have the same width
+  (corfu-count 16)
   (corfu-scroll-margin 4)
-  (corfu-cycle nil)
+  (corfu-cycle t)
 
   ;; `nil' means to ignore `corfu-separator' behavior, that is, use the older
   ;; `corfu-quit-at-boundary' = nil behavior. Set this to separator if using
@@ -85,42 +84,49 @@
   (text-mode-ispell-word-completion nil)
   (completion-cycle-threshold nil))
 
-;; Configure Tempel
-(use-package tempel
-  ;; Require trigger prefix before template name when completing.
-  ;; :custom
-  ;; (tempel-trigger-prefix "<")
+(use-package nerd-icons-corfu
+  :defer t
+  :init
+  (with-eval-after-load 'corfu
+    (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)))
 
-  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
-         ("M-*" . tempel-insert))
+(defvar +snippets-dir (expand-file-name "snippets/" minimal-emacs-user-directory)
+  "Directory where `yasnippet' will search for your private snippets.")
+
+(use-package yasnippet
+  :defer t
+  :commands (yas-minor-mode-on
+             yas-expand
+             yas-expand-snippet
+             yas-lookup-snippet
+             yas-insert-snippet
+             yas-new-snippet
+             yas-visit-snippet-file
+             yas-activate-extra-mode
+             yas-deactivate-extra-mode
+             yas-maybe-expand-abbrev-key-filter)
 
   :init
-  ;; Setup completion at point
-  (defun tempel-setup-capf ()
-    ;; Add the Tempel Capf to `completion-at-point-functions'.
-    ;; `tempel-expand' only triggers on exact matches. Alternatively use
-    ;; `tempel-complete' if you want to see all matches, but then you
-    ;; should also configure `tempel-trigger-prefix', such that Tempel
-    ;; does not trigger too often when you don't expect it. NOTE: We add
-    ;; `tempel-expand' *before* the main programming mode Capf, such
-    ;; that it will be tried first.
-    (setq-local completion-at-point-functions
-                (cons #'tempel-expand
-                      completion-at-point-functions)))
+  (setq yas-verbosity 2)
 
-  (add-hook 'conf-mode-hook 'tempel-setup-capf)
-  (add-hook 'prog-mode-hook 'tempel-setup-capf)
-  (add-hook 'text-mode-hook 'tempel-setup-capf)
+  :config
+  (add-to-list 'yas-snippet-dirs '+snippets-dir)
+  (add-to-list 'load-path +snippets-dir)
 
-  ;; Optionally make the Tempel templates available to Abbrev,
-  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
-  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
-  ;; (global-tempel-abbrev-mode)
-)
+  (yas-global-mode 1))
 
-;; Optional: Add tempel-collection.
-;; The package is young and doesn't have comprehensive coverage.
-(use-package tempel-collection)
+(use-package yasnippet-snippets
+  :defer t)
+
+(use-package yasnippet-capf
+  :defer t
+  :init
+  (add-hook 'yas-minor-mode-hook
+            (lambda ()
+              (add-hook 'completion-at-point-functions #'yasnippet-capf 30 t))))
+
+(use-package auto-yasnippet
+  :defer t)
 
 (use-package cape
   :ensure t
@@ -148,7 +154,8 @@
   :custom
   (completion-styles '(orderless basic))
   (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion)))))
+  (orderless-component-separator #'orderless-escapable-split-on-space)
+  (completion-category-overrides '((file (styles orderless partial-completion)))))
 
 (provide 'completion)
 ;;; completion.el ends here

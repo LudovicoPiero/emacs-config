@@ -24,11 +24,10 @@
 
 ;;; Code:
 
-(use-package org
-  :init
-  (global-org-modern-mode))
-
 (use-package org-modern
+  :init
+  (global-org-modern-mode)
+
   :config
   ;; Behavior settings
   (setq org-auto-align-tags nil

@@ -26,7 +26,6 @@
 
 (use-package diminish)
 (use-package deadgrep)
-(use-package magit)
 
 (use-package elcord
   :config

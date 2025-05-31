@@ -47,11 +47,15 @@
   (push "/pre-init.el" compile-angel-excluded-files)
   (push "/post-init.el" compile-angel-excluded-files)
   (push "/pre-early-init.el" compile-angel-excluded-files)
-  (push "/post-early-init.el" compile-angel-excluded-files)
-
-  ;; FIXME: this doesn't seem to work as expected.
-  (let ((mine-dir (expand-file-name "~/.emacs.d/mine/")))
-    (push mine-dir compile-angel-excluded-files))
+  (push "/mine/completion.el" compile-angel-excluded-files)
+  (push "/mine/core.el" compile-angel-excluded-files)
+  (push "/mine/dired.el" compile-angel-excluded-files)
+  (push "/mine/etc.el" compile-angel-excluded-files)
+  (push "/mine/git.el" compile-angel-excluded-files)
+  (push "/mine/keybinds.el" compile-angel-excluded-files)
+  (push "/mine/languages.el" compile-angel-excluded-files)
+  (push "/mine/org.el" compile-angel-excluded-files)
+  (push "/mine/ui.el" compile-angel-excluded-files)
 
   ;; A local mode that compiles .el files whenever the user saves them.
   ;; (add-hook 'emacs-lisp-mode-hook #'compile-angel-on-save-local-mode)
@@ -140,23 +144,6 @@
 
   ;; Enable draggable window dividers
   (add-hook 'after-init-hook #'window-divider-mode)
-
-  ;; Hide file details in Dired by default
-  (add-hook 'dired-mode-hook #'dired-hide-details-mode)
-
-  ;; Hide dotfiles and unimportant files in Dired
-  (setq dired-omit-files
-        (concat "\\`[.]\\'"
-                "\\|\\(?:\\.js\\)?\\.meta\\'"
-                "\\|\\.\\(?:elc\\|a\\|o\\|pyc\\|pyo\\|swp\\|class\\)\\'"
-                "\\|^\\.DS_Store\\'"
-                "\\|^\\.\\(?:svn\\|git\\)\\'"
-                "\\|^\\.ccls-cache\\'"
-                "\\|^__pycache__\\'"
-                "\\|^\\.project\\(?:ile\\)?\\'"
-                "\\|^flycheck_.*"
-                "\\|^flymake_.*"))
-  (add-hook 'dired-mode-hook #'dired-omit-mode)
 
   ;; Use block cursor in all modes
   (setq-default cursor-type 'box)

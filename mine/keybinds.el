@@ -77,15 +77,15 @@
     :global-prefix "M-SPC") ;; access leader in insert mode
 
   (airi/leader-keys
-    "SPC" '(consult-buffer :wk "Consult project buffer")
-    "." '(find-file :wk "Find file")
+    "SPC" '(consult-buffer :wk "Consult buffer")
+    "."   '(find-file :wk "Find file")
     "TAB TAB" '(comment-line :wk "Comment lines"))
 
   (airi/leader-keys
-    "b" '(:ignore t :wk "buffer")
-    "b b" '(switch-to-buffer :wk "Switch buffer")
+    "b" '(:ignore t :wk "Buffer")
+    "b b" '(consult-buffer :wk "Switch buffer")
     "b i" '(ibuffer :wk "Ibuffer")
-    "b k" '(kill-this-buffer :wk "Kill this buffer")
+    "b k" '(kill-current-buffer :wk "Kill this buffer")
     "b n" '(next-buffer :wk "Next buffer")
     "b p" '(previous-buffer :wk "Previous buffer")
     "b r" '(revert-buffer :wk "Reload buffer"))
@@ -101,12 +101,12 @@
     "e" '(:ignore t :wk "Eshell/Evaluate")
     "e b" '(eval-buffer :wk "Evaluate elisp in buffer")
     "e d" '(eval-defun :wk "Evaluate defun containing or after point")
-    "e e" '(eval-expression :wk "Evaluate and elisp expression")
+    "e e" '(eval-expression :wk "Evaluate elisp expression")
     "e l" '(eval-last-sexp :wk "Evaluate elisp expression before point")
     "e r" '(eval-region :wk "Evaluate elisp in region")
-    "e R" '(eww-reload :which-key "Reload current page in EWW")
-    "e s" '(eshell :which-key "Eshell")
-    "e w" '(eww :which-key "EWW emacs web wowser"))
+    "e R" '(eww-reload :wk "Reload current page in EWW")
+    "e s" '(eshell :wk "Eshell")
+    "e w" '(eww :wk "EWW emacs web browser"))
 
   (airi/leader-keys
     "f" '(:ignore t :wk "Format")
@@ -117,7 +117,7 @@
     "g" '(:ignore t :wk "Magit")
     "g g" '(magit-status :wk "Open magit status"))
 
- (airi/leader-keys
+  (airi/leader-keys
     "h" '(:ignore t :wk "Help")
     "h f" '(describe-function :wk "Describe function")
     "h r r" '(reload-init-file :wk "Reload emacs config")
@@ -135,13 +135,13 @@
   (airi/leader-keys
     "s" '(:ignore t :wk "Search")
     "s b" '(consult-buffer :wk "Search buffers")
-    "s p b" '(consult-project-buffer :wk "Search buffers")
-    "s f" '(consult-find :wk "Search find")
-    "s g" '(consult-ripgrep :wk "Search grep using consult-ripgrep")
-    "s G" '(deadgrep :wk "Search grep using Deadgrep")
-    "s m" '(consult-man :wk "Search man")
+    "s p b" '(consult-project-buffer :wk "Search project buffers")
+    "s f" '(consult-fd :wk "Search files")
+    "s g" '(consult-ripgrep :wk "Search with ripgrep")
+    "s G" '(deadgrep :wk "Search with Deadgrep")
+    "s m" '(consult-man :wk "Search man pages")
     "s r" '(consult-recent-file :wk "Search recent files")
-    "s t" '(hl-todo-rgrep :wk "Search TODO"))
+    "s t" '(hl-todo-rgrep :wk "Search TODOs"))
 
   (airi/leader-keys
     "w" '(:ignore t :wk "Windows")
@@ -162,8 +162,8 @@
     "w K" '(buf-move-up :wk "Buffer move up")
     "w L" '(buf-move-right :wk "Buffer move right"))
 
-    (airi/leader-keys
-    "y"   '(:ignore t :wk "Yasnippet")
+  (airi/leader-keys
+    "y" '(:ignore t :wk "Yasnippet")
     "y i" '(yas-insert-snippet :wk "Insert snippet")
     "y n" '(yas-new-snippet :wk "New snippet")
     "y e" '(yas-expand :wk "Expand snippet")

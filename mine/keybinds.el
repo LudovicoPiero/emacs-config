@@ -170,6 +170,11 @@
              undo-fu-only-redo-all
              undo-fu-disable-checkpoint)
   :config
+  ;; Increase undo history limits to reduce likelihood of data loss
+  (setq undo-limit 256000           ; 256kb (default is 160kb)
+        undo-strong-limit 2000000   ; 2mb   (default is 240kb)
+        undo-outer-limit 36000000)  ; 36mb  (default is 24mb)
+
   (global-unset-key (kbd "C-z"))
   (global-set-key (kbd "C-z") 'undo-fu-only-undo)
   (global-set-key (kbd "C-S-z") 'undo-fu-only-redo))
@@ -179,6 +184,14 @@
 (use-package undo-fu-session
   :defer t
   :commands undo-fu-session-global-mode
+
+  :config
+  (setq undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
+  (when (executable-find "zstd")
+    ;; There are other algorithms available, but zstd is the fastest, and speed
+    ;; is our priority within Emacs
+    (setq undo-fu-session-compression 'zst))
+
   :hook (after-init . undo-fu-session-global-mode))
 
 (use-package which-key

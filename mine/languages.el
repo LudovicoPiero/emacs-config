@@ -24,17 +24,16 @@
 
 ;;; Code:
 
-(use-package lsp-mode
-  :commands (lsp lsp-deferred)
+(use-package lsp-bridge
+  :straight '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge"
+            :files (:defaults "*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
+            :build (:not compile))
   :init
-  (setq lsp-keymap-prefix "C-c l"
-        lsp-enable-suggest-server-download nil) ;; disable server downloading suggestions
-  :hook (lsp-mode . lsp-enable-which-key-integration))
+  (global-lsp-bridge-mode))
 
 (use-package lsp-ui
  :commands lsp-ui-mode)
 
-;; Major mode remapping: same as eglot
 (setq major-mode-remap-alist
       '((python-mode . python-ts-mode)
         (rust-mode . rust-ts-mode)
@@ -68,7 +67,12 @@
 (use-package nix-mode
   :ensure t
   :mode "\\.nix\\'"
-  :hook (nix-mode . lsp-deferred)
+  :config
+  (setq lsp-bridge-nix-lsp-server "nixd"
+        lsp-nix-nixd-formatting-command ["nixfmt" "--strict"]
+        lsp-nix-nixd-nixpkgs-expr "import <nixpkgs> { }"
+        lsp-nix-nixd-nixos-options-expr "(builtins.getFlake \"/home/airi/Code/nixos\").nixosConfigurations.sforza.options")
+  :hook (nix-mode . lsp)
   :interpreter ("\\(?:cached-\\)?nix-shell" . +nix-shell-init-mode))
 
 (add-to-list 'auto-mode-alist '("/flake\\.lock\\'" . json-mode))
@@ -76,11 +80,22 @@
 (use-package nix-update
   :commands nix-update-fetch)
 
+;; Golang
+(use-package go-mode
+  :ensure t
+  :mode ("\\.go\\'" . go-ts-mode)
+  :hook (go-ts-mode . lsp)
+  :config
+  (setq lsp-gopls-server-path "gopls"))
+
 ;; Python setup
 (use-package python
   :ensure nil
   :mode ("\\.py\\'" . python-ts-mode)
-  :hook (python-ts-mode . lsp-deferred))
+  :hook (python-ts-mode . lsp)
+  :config
+  (setq lsp-bridge-python-lsp-server "basedpyright"
+        lsp-bridge-python-multi-lsp-server "basedpyright_ruff"))
 
 (with-eval-after-load 'flycheck
   (flycheck-define-checker python-ruff
@@ -95,13 +110,13 @@
 (use-package rust-mode
   :ensure nil
   :mode ("\\.rs\\'" . rust-ts-mode)
-  :hook (rust-ts-mode . lsp-deferred))
+  :hook (rust-ts-mode . lsp))
 
 ;; Web development
 (use-package web-mode
   :ensure t
   :mode ("\\.html?\\'" "\\.php\\'")
-  :hook (web-mode . lsp-deferred)
+  :hook (web-mode . lsp)
   :config
   (setq web-mode-enable-current-column-highlight t
         web-mode-enable-current-element-highlight t
@@ -112,19 +127,19 @@
 (use-package css-mode
   :ensure nil
   :mode "\\.css\\'"
-  :hook (css-mode . lsp-deferred))
+  :hook (css-mode . lsp))
 
 (use-package js
   :ensure nil
   :mode ("\\.js\\'" . js-ts-mode)
-  :hook (js-ts-mode . lsp-deferred)
+  :hook (js-ts-mode . lsp)
   :config
   (setq js-indent-level 2))
 
 (use-package typescript-mode
   :ensure nil
   :mode ("\\.ts\\'" . typescript-ts-mode)
-  :hook (typescript-ts-mode . lsp-deferred)
+  :hook (typescript-ts-mode . lsp)
   :config
   (setq typescript-indent-level 2))
 

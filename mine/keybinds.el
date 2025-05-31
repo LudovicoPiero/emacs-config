@@ -77,7 +77,7 @@
     :global-prefix "M-SPC") ;; access leader in insert mode
 
   (airi/leader-keys
-    "SPC" '(consult-project-buffer :wk "Consult project buffer")
+    "SPC" '(consult-buffer :wk "Consult project buffer")
     "." '(find-file :wk "Find file")
     "TAB TAB" '(comment-line :wk "Comment lines"))
 
@@ -134,8 +134,9 @@
 
   (airi/leader-keys
     "s" '(:ignore t :wk "Search")
-    "s b" '(consult-project-buffer :wk "Search buffers")
-    "s f" '(project-find-file :wk "Search find")
+    "s b" '(consult-buffer :wk "Search buffers")
+    "s p b" '(consult-project-buffer :wk "Search buffers")
+    "s f" '(consult-find :wk "Search find")
     "s g" '(consult-ripgrep :wk "Search grep using consult-ripgrep")
     "s G" '(deadgrep :wk "Search grep using Deadgrep")
     "s m" '(consult-man :wk "Search man")

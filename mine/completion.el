@@ -120,10 +120,7 @@
 
 (use-package yasnippet-capf
   :defer t
-  :init
-  (add-hook 'yas-minor-mode-hook
-            (lambda ()
-              (add-hook 'completion-at-point-functions #'yasnippet-capf 30 t))))
+  :after cape)
 
 (use-package auto-yasnippet
   :defer t)
@@ -137,6 +134,7 @@
   ;; Add to the global default value of `completion-at-point-functions' which is
   ;; used by `completion-at-point'.
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'yasnippet-capf)
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
 

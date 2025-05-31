@@ -107,6 +107,9 @@
   ;; Enable relative line numbers globally
   (global-display-line-numbers-mode t)
 
+  ;; Enable line highlighting in all buffers
+  (global-hl-line-mode 1)
+
   ;; Set default font
   (when (display-graphic-p)
   (set-face-attribute 'default nil

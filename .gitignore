@@ -4,6 +4,7 @@
 
 *.elc
 var/
+/snippets/
 
 # Created by https://www.toptal.com/developers/gitignore/api/direnv,emacs,vim,git,patch
 # Edit at https://www.toptal.com/developers/gitignore?templates=direnv,emacs,vim,git,patch

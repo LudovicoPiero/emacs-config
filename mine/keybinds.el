@@ -160,6 +160,15 @@
     "w J" '(buf-move-down :wk "Buffer move down")
     "w K" '(buf-move-up :wk "Buffer move up")
     "w L" '(buf-move-right :wk "Buffer move right"))
+
+    (airi/leader-keys
+    "y"   '(:ignore t :wk "Yasnippet")
+    "y i" '(yas-insert-snippet :wk "Insert snippet")
+    "y n" '(yas-new-snippet :wk "New snippet")
+    "y e" '(yas-expand :wk "Expand snippet")
+    "y r" '(yas-reload-all :wk "Reload all snippets")
+    "y v" '(yas-visit-snippet-file :wk "Visit snippet file")
+    "y l" '(yas-describe-tables :wk "Describe snippet tables"))
 )
 
 ;; The undo-fu package is a lightweight wrapper around Emacs' built-in undo

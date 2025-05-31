@@ -29,6 +29,7 @@
             :files (:defaults "*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
             :build (:not compile))
   :init
+  (setq acm-enable-yas nil)
   (global-lsp-bridge-mode))
 
 (use-package lsp-ui

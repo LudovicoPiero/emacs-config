@@ -118,6 +118,27 @@
   ;; Disable any themes that were enabled early
   (mapc #'disable-theme custom-enabled-themes)
 
+  ;; Filter more buffers
+  (with-eval-after-load 'consult
+    (dolist (pattern
+             '("\\`\\*Help\\*\\'"
+               "\\`\\*scratch\\*\\'"
+               "\\`\\*Messages\\*\\'"
+               "\\`\\*Ibuffer\\*\\'"
+               "\\`\\*straight-process\\*\\'"
+               "\\`\\*Async-native-compile-log\\*\\'"
+               "\\`\\*lsp-bridge\\*\\'"
+               "\\`\\*lsp-log\\*\\'"
+               "\\`\\*nixd-lsp\\*\\'"
+               "\\`\\*nixd-lsp::stderr\\*\\'"
+               "\\`\\*info\\*\\'"
+               "\\`\\*Warnings\\*\\'"
+               "\\`\\*Compile-Log\\*\\'"
+               "\\`\\*direnv\\*\\'"))
+      ;; Add pattern only if it's not already in consult-buffer-filter
+      (unless (member pattern consult-buffer-filter)
+        (add-to-list 'consult-buffer-filter pattern))))
+
   ;; Enable recentf-mode silently after init
   (add-hook 'after-init-hook
             (lambda ()

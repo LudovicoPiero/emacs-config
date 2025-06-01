@@ -62,11 +62,16 @@
          (shell-mode . corfu-mode)
          (eshell-mode . corfu-mode)))
 
-(use-package nerd-icons-corfu
-  :defer t
-  :init
-  (with-eval-after-load 'corfu
-    (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)))
+(use-package kind-icon
+  :after corfu
+  :custom
+  (kind-icon-use-icons t)
+  (kind-icon-default-face 'corfu-default) ; Have background color be the same as `corfu' face background
+  (kind-icon-blend-background nil)  ; Use midpoint color between foreground and background colors ("blended")?
+  (kind-icon-blend-frac 0.08)
+
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)) ; Enable `kind-icon'
 
 (defvar +snippets-dir (expand-file-name "snippets/" minimal-emacs-user-directory)
   "Directory where `yasnippet' will search for your private snippets.")

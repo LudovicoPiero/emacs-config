@@ -42,8 +42,8 @@
   (completion-cycle-threshold nil)
   ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
   ;; want to perform completion
-  ;; (tab-always-indent 'complete)
-  ;; (completion-cycle-threshold nil)      ; Always show candidates in menu
+  (tab-always-indent 'complete)
+  (completion-cycle-threshold nil)      ; Always show candidates in menu
 
   :init
   (global-corfu-mode)

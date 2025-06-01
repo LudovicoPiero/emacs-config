@@ -63,10 +63,6 @@
   :ensure t
   :if (display-graphic-p))
 
-(use-package centered-cursor-mode
-  :diminish centered-cursor-mode
-  :config (global-centered-cursor-mode))
-
 (use-package hl-todo
   :hook ((org-mode . hl-todo-mode)
          (prog-mode . hl-todo-mode))

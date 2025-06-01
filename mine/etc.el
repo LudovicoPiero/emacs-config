@@ -27,6 +27,11 @@
 (use-package diminish)
 (use-package deadgrep)
 
+(use-package vterm
+  :ensure nil)
+(use-package vterm-toggle
+  :ensure t)
+
 (use-package elcord
   :config
   (setq elcord-quiet t)

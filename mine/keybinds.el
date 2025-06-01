@@ -144,6 +144,11 @@
     "s t" '(hl-todo-rgrep :wk "Search TODOs"))
 
   (airi/leader-keys
+      "v" '(:ignore t :wk "Vterm")
+      "v t" '(vterm-toggle :wk "Vterm Toggle")
+      "v c" '(vterm-toggle-cd :wk "Vterm Toggle CD"))
+
+  (airi/leader-keys
     "w" '(:ignore t :wk "Windows")
     ;; Window splits
     "w c" '(evil-window-delete :wk "Close window")

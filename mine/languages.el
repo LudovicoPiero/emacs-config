@@ -137,36 +137,94 @@
   :mode ("\\.rs\\'" . rust-ts-mode)
   :hook (rust-ts-mode . lsp-deferred))
 
-;; Web development
-(use-package web-mode
-  :ensure t
-  :mode ("\\.html?\\'" "\\.php\\'")
-  :hook (web-mode . lsp-deferred)
-  :config
-  (setq web-mode-enable-current-column-highlight t
-        web-mode-enable-current-element-highlight t
-        web-mode-markup-indent-offset 2
-        web-mode-css-indent-offset 2
-        web-mode-code-indent-offset 2))
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;  Web development   ;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+(dolist (remap '((js-mode         . js-ts-mode)
+                 (typescript-mode . typescript-ts-mode)
+                 (html-mode       . html-ts-mode)
+                 (php-mode        . php-ts-mode)
+                 (tsx-mode        . tsx-ts-mode)
+                 (jsx-mode        . js-ts-mode)))
+  (add-to-list 'major-mode-remap-alist remap))
 
+;; HTML (Tree-sitter)
+(use-package html-ts-mode
+  :ensure nil
+  :mode ("\\.html?\\'" . html-ts-mode)
+  :hook (html-ts-mode . lsp-deferred)
+  :config
+  (setq-local indent-tabs-mode nil
+              tab-width 2))
+
+;; PHP (Tree-sitter)
+(use-package php-ts-mode
+  :ensure nil
+  :mode ("\\.php\\'" . php-ts-mode)
+  :hook (php-ts-mode . lsp-deferred)
+  :config
+  (setq-local indent-tabs-mode nil
+              tab-width 2))
+
+;; CSS
 (use-package css-mode
   :ensure nil
   :mode "\\.css\\'"
-  :hook (css-mode . lsp-deferred))
-
-(use-package js
-  :ensure nil
-  :mode ("\\.js\\'" . js-ts-mode)
-  :hook (js-ts-mode . lsp-deferred)
+  :hook (css-mode . lsp-deferred)
   :config
-  (setq js-indent-level 2))
+  (setq css-indent-offset 2))
 
+;; TypeScript (Tree-sitter)
 (use-package typescript-mode
   :ensure nil
   :mode ("\\.ts\\'" . typescript-ts-mode)
   :hook (typescript-ts-mode . lsp-deferred)
   :config
-  (setq typescript-indent-level 2))
+  (setq typescript-indent-level 2
+        tab-width 2
+        indent-tabs-mode nil))
+
+;; JavaScript (Tree-sitter)
+(use-package js
+  :ensure nil
+  :mode (("\\.js\\'" . js-ts-mode)
+         ("\\.jsx\\'" . js-ts-mode))
+  :hook (js-ts-mode . lsp-deferred)
+  :config
+  (setq-local js-indent-level 2
+              tab-width 2
+              indent-tabs-mode nil))
+
+;; TSX (Tree-sitter)
+(use-package tsx-ts-mode
+  :ensure nil
+  :mode ("\\.tsx\\'" . tsx-ts-mode)
+  :hook (tsx-ts-mode . lsp-deferred)
+  :config
+  (setq-local tab-width 2
+              indent-tabs-mode nil))
+
+;; Optional: Astro, Vue, ERB, EJS, etc. using web-mode
+(defun airi/web-mode-lsp-if-supported ()
+  (when (member (file-name-extension (or buffer-file-name "")) '("astro" "vue" "erb" "ejs" "tmpl"))
+    (lsp-deferred)))
+
+(use-package web-mode
+  :ensure t
+  :mode (("\\.astro\\'" . web-mode)
+         ("\\.vue\\'"  . web-mode)
+         ("\\.erb\\'"  . web-mode)
+         ("\\.ejs\\'"  . web-mode)
+         ("\\.tmpl\\'" . web-mode))
+  :hook (web-mode . airi/web-mode-lsp-if-supported)
+  :config
+  (setq-local indent-tabs-mode nil
+              tab-width 2
+              web-mode-enable-current-column-highlight t
+              web-mode-enable-current-element-highlight t
+              web-mode-markup-indent-offset 2
+              web-mode-css-indent-offset 2
+              web-mode-code-indent-offset 2))
 
 (provide 'languages)
 ;;; languages.el ends here

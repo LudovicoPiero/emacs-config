@@ -53,7 +53,14 @@
 
 (use-package evil-nerd-commenter
   :after evil
-  :diminish)
+  :diminish
+  :config
+  (evil-define-key 'normal 'global
+    "gcb" 'evilnc-comment-box
+    "gcc" 'evilnc-comment-or-uncomment-lines
+    "gcp" 'evilnc-comment-or-uncomment-paragraphs
+    "gct" 'evilnc-comment-or-uncomment-html-tag
+    "gcd" 'evilnc-copy-and-comment-lines))
 
 ;; Setting RETURN key in org-mode to follow links
 (setq org-return-follows-link t)

@@ -100,7 +100,7 @@
   :hook (nix-mode . lsp-deferred)
   :interpreter ("\\(?:cached-\\)?nix-shell" . +nix-shell-init-mode))
 
-(add-to-list 'auto-mode-alist '("flake\\.lock\\'" . js-json-mode))
+(add-to-list 'auto-mode-alist '("flake\\.lock\\'" . json-ts-mode))
 
 (use-package nix-update
   :commands nix-update-fetch)

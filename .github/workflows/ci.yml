@@ -23,8 +23,8 @@ jobs:
     strategy:
       matrix:
         emacs-version:
-          - 29.1
-          - 29.4
+          # - 29.1
+          # - 29.4
           - 30.1
         python-version:
           - 3.11

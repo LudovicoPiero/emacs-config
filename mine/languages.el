@@ -83,13 +83,20 @@
             (setq-local quickrun-option-shebang nil)))))))
 
 (use-package nix-mode
-  :ensure t
+  :defer t
   :mode "\\.nix\\'"
-  :config
-  (setq  lsp-nix-nixd-formatting-command ["nixfmt" "--strict"]
-         lsp-nix-nixd-nixpkgs-expr "import <nixpkgs> { }"
-         lsp-nix-nixd-nixos-options-expr "(builtins.getFlake \"/home/airi/Code/nixos\").nixosConfigurations.sforza.options"
-         lsp-nix-nixd-home-manager-options-expr "(builtins.getFlake \"/home/airi/Code/nixos\").homeConfigurations.\"airi@sforza\".options")
+
+  :custom
+  (lsp-nix-nixd-server-path "nixd")
+  (lsp-nix-nixd-formatting-command [ "nixfmt" "--strict" ])
+  (lsp-nix-nixd-nixpkgs-expr "import <nixpkgs> { }")
+  (lsp-nix-nixd-nixos-options-expr
+   (concat "(builtins.getFlake \"/home/airi/Code/nixos\")"
+           ".nixosConfigurations.sforza.options"))
+  (lsp-nix-nixd-home-manager-options-expr
+   (concat "(builtins.getFlake \"/home/airi/Code/nvim-flake\")"
+           ".homeConfigurations.\"airi@sforza\".options"))
+
   :hook (nix-mode . lsp-deferred)
   :interpreter ("\\(?:cached-\\)?nix-shell" . +nix-shell-init-mode))
 

@@ -25,16 +25,31 @@
 ;;; Code:
 
 (use-package corfu
-  :ensure t
-  :defer t
-  :commands (corfu-mode global-corfu-mode)
+  :custom
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.0)
+  (corfu-quit-at-boundary 'separator)
+  (corfu-preview-current 'insert)
+  (corfu-preselect-first nil)
+
+  ;; Other
+  ;; Hide commands in M-x which do not apply to the current mode.
+  (read-extended-command-predicate #'command-completion-default-include-p)
+  ;; Disable Ispell completion function. As an alternative try `cape-dict'.
+  (text-mode-ispell-word-completion nil)
+  (completion-cycle-threshold nil)
+  ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
+  ;; want to perform completion
+  ;; (tab-always-indent 'complete)
+  ;; (completion-cycle-threshold nil)      ; Always show candidates in menu
 
   :init
   (global-corfu-mode)
   ;; Enable optional extension modes:
   (corfu-history-mode)
   (corfu-popupinfo-mode)
-
   ;; Setup lsp to use corfu for lsp completion
   (defun airi/corfu-setup-lsp ()
     "Set LSP completion to use Orderless with lsp-capf."
@@ -45,44 +60,7 @@
   :hook ((prog-mode . corfu-mode)
          (lsp-completion-mode . airi/corfu-setup-lsp)
          (shell-mode . corfu-mode)
-         (eshell-mode . corfu-mode))
-
-  :custom
-  ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
-  ;; want to perform completion
-  (tab-always-indent 'complete)
-  (completion-cycle-threshold nil)      ; Always show candidates in menu
-
-  (corfu-auto t)
-  (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.24)
-
-  (corfu-max-width 120)     ; Always have the same width
-  (corfu-count 16)
-  (corfu-scroll-margin 4)
-  (corfu-cycle t)
-
-  ;; `nil' means to ignore `corfu-separator' behavior, that is, use the older
-  ;; `corfu-quit-at-boundary' = nil behavior. Set this to separator if using
-  ;; `corfu-auto' = `t' workflow (in that case, make sure you also set up
-  ;; `corfu-separator' and a keybind for `corfu-insert-separator', which my
-  ;; configuration already has pre-prepared). Necessary for manual corfu usage with
-  ;; orderless, otherwise first component is ignored, unless `corfu-separator'
-  ;; is inserted.
-  (corfu-quit-at-boundary nil)
-  (corfu-separator ?\s)            ; Use space
-  (corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
-  (corfu-preview-current 'insert)  ; Preview first candidate. Insert on input if only one
-  (corfu-preselect-first t)        ; Preselect first candidate?
-
-  ;; Other
-  (corfu-echo-documentation nil)        ; Already use corfu-doc
-  (lsp-completion-provider :none)       ; Use corfu instead for lsp completions
-  ;; Hide commands in M-x which do not apply to the current mode.
-  (read-extended-command-predicate #'command-completion-default-include-p)
-  ;; Disable Ispell completion function. As an alternative try `cape-dict'.
-  (text-mode-ispell-word-completion nil)
-  (completion-cycle-threshold nil))
+         (eshell-mode . corfu-mode)))
 
 (use-package nerd-icons-corfu
   :defer t

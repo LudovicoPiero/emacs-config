@@ -127,7 +127,6 @@
                "\\`\\*Ibuffer\\*\\'"
                "\\`\\*straight-process\\*\\'"
                "\\`\\*Async-native-compile-log\\*\\'"
-               "\\`\\*lsp-bridge\\*\\'"
                "\\`\\*lsp-log\\*\\'"
                "\\`\\*nixd-lsp\\*\\'"
                "\\`\\*nixd-lsp::stderr\\*\\'"

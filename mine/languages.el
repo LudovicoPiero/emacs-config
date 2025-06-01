@@ -24,22 +24,39 @@
 
 ;;; Code:
 
-(use-package lsp-bridge
-  :straight '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge"
-            :files (:defaults "*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
-            :build (:not compile))
-  :init
-  (setq acm-enable-yas nil)
-  (global-lsp-bridge-mode))
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+   :init
+  (setq lsp-keymap-prefix "C-c l"
+        lsp-enable-suggest-server-download nil) ;; disable server downloading suggestions
+  :hook (lsp-mode . lsp-enable-which-key-integration))
 
 (use-package lsp-ui
- :commands lsp-ui-mode)
+ :commands lsp-ui-mode
+ :init
+ (setq ;; Sideline
+       lsp-ui-sideline-enable t
+       lsp-ui-sideline-show-hover t
+       lsp-ui-sideline-show-diagnostics t
+       lsp-ui-sideline-show-code-actions t
+       lsp-ui-sideline-show-hover t
 
-(setq major-mode-remap-alist
-      '((python-mode . python-ts-mode)
-        (rust-mode . rust-ts-mode)
-        (js-mode . js-ts-mode)
-        (typescript-mode . typescript-ts-mode)))
+       ;; Peek
+       lsp-ui-peek-enable t
+       lsp-ui-peek-show-directory t
+
+       ;; Docs
+       lsp-ui-doc-enable t
+       lsp-ui-doc-position 'top
+       lsp-ui-doc-side 'right
+       lsp-ui-doc-delay 0
+
+       ;; imenu
+       lsp-ui-imenu-kind-position 'top
+       lsp-ui-imenu-buffer-position 'right
+       lsp-ui-imenu-window-fix-width nil
+       lsp-ui-imenu-auto-refresh nil
+       lsp-ui-imenu-auto-refresh-delay 1.0))
 
 ;; Nix shell interpreter detection
 (defun +nix-shell-init-mode ()
@@ -69,11 +86,11 @@
   :ensure t
   :mode "\\.nix\\'"
   :config
-  (setq lsp-bridge-nix-lsp-server "nixd"
-        lsp-nix-nixd-formatting-command ["nixfmt" "--strict"]
-        lsp-nix-nixd-nixpkgs-expr "import <nixpkgs> { }"
-        lsp-nix-nixd-nixos-options-expr "(builtins.getFlake \"/home/airi/Code/nixos\").nixosConfigurations.sforza.options")
-  :hook (nix-mode . lsp)
+  (setq  lsp-nix-nixd-formatting-command ["nixfmt" "--strict"]
+         lsp-nix-nixd-nixpkgs-expr "import <nixpkgs> { }"
+         lsp-nix-nixd-nixos-options-expr "(builtins.getFlake \"/home/airi/Code/nixos\").nixosConfigurations.sforza.options"
+         lsp-nix-nixd-home-manager-options-expr "(builtins.getFlake \"/home/airi/Code/nixos\").homeConfigurations.\"airi@sforza\".options")
+  :hook (nix-mode . lsp-deferred)
   :interpreter ("\\(?:cached-\\)?nix-shell" . +nix-shell-init-mode))
 
 (add-to-list 'auto-mode-alist '("/flake\\.lock\\'" . json-mode))
@@ -85,7 +102,7 @@
 (use-package go-mode
   :ensure t
   :mode ("\\.go\\'" . go-ts-mode)
-  :hook (go-ts-mode . lsp)
+  :hook (go-ts-mode . lsp-deferred)
   :config
   (setq lsp-gopls-server-path "gopls"))
 
@@ -93,7 +110,7 @@
 (use-package python
   :ensure nil
   :mode ("\\.py\\'" . python-ts-mode)
-  :hook (python-ts-mode . lsp)
+  :hook (python-ts-mode . lsp-deferred)
   :config
   (setq lsp-bridge-python-lsp-server "basedpyright"
         lsp-bridge-python-multi-lsp-server "basedpyright_ruff"))
@@ -111,13 +128,13 @@
 (use-package rust-mode
   :ensure nil
   :mode ("\\.rs\\'" . rust-ts-mode)
-  :hook (rust-ts-mode . lsp))
+  :hook (rust-ts-mode . lsp-deferred))
 
 ;; Web development
 (use-package web-mode
   :ensure t
   :mode ("\\.html?\\'" "\\.php\\'")
-  :hook (web-mode . lsp)
+  :hook (web-mode . lsp-deferred)
   :config
   (setq web-mode-enable-current-column-highlight t
         web-mode-enable-current-element-highlight t
@@ -128,19 +145,19 @@
 (use-package css-mode
   :ensure nil
   :mode "\\.css\\'"
-  :hook (css-mode . lsp))
+  :hook (css-mode . lsp-deferred))
 
 (use-package js
   :ensure nil
   :mode ("\\.js\\'" . js-ts-mode)
-  :hook (js-ts-mode . lsp)
+  :hook (js-ts-mode . lsp-deferred)
   :config
   (setq js-indent-level 2))
 
 (use-package typescript-mode
   :ensure nil
   :mode ("\\.ts\\'" . typescript-ts-mode)
-  :hook (typescript-ts-mode . lsp)
+  :hook (typescript-ts-mode . lsp-deferred)
   :config
   (setq typescript-indent-level 2))
 

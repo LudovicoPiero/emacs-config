@@ -45,9 +45,8 @@
 
 ;;; Undo/redo
 
-(setq undo-limit (* 13 160000)
-      undo-strong-limit (* 13 240000)
-      undo-outer-limit (* 13 24000000))
+;; Disable warnings from the legacy advice API. They aren't useful.
+(setq ad-redefinition-action 'accept)
 
 ;;; package.el
 

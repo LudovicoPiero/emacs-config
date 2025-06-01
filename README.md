@@ -1114,7 +1114,9 @@ fc-list : family | sed 's/,/\n/g' | sort -u
 (setq mode-line-position-column-line-format '("%l:%C"))
 
 ;; Display of line numbers in the buffer:
-;; (display-line-numbers-mode 1)
+(setq-default display-line-numbers-type 'relative)
+(dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+  (add-hook hook #'display-line-numbers-mode))
 
 (use-package which-key
   :ensure nil ; builtin

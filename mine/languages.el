@@ -53,6 +53,7 @@
        lsp-ui-doc-position 'top
        lsp-ui-doc-side 'right
        lsp-ui-doc-delay 0
+       lsp-ui-doc-show-with-mouse nil
 
        ;; imenu
        lsp-ui-imenu-kind-position 'top

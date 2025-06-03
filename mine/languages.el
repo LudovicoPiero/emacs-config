@@ -24,6 +24,22 @@
 
 ;;; Code:
 
+(use-package format-all
+  :defer t
+  :config
+  (setq-default format-all-formatters
+                '(("Nix"        (nixfmt "--strict"))
+                  ("C"          (clang-format))
+                  ("Go"         (gofmt))
+                  ("Python"     (ruff))
+                  ("Rust"       (rustfmt))
+                  ("Emacs Lisp" (emacs-lisp))
+	                ("JavaScript" (prettierd))
+	                ("JSON"       (prettierd))
+	                ("TypeScript" (prettierd))
+	                ("Vue"        (prettierd))
+	                ("HTML"       (prettierd)))))
+
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
    :init

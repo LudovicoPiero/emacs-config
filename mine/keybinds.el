@@ -117,8 +117,6 @@
 
   (airi/leader-keys
     "f" '(:ignore t :wk "Format")
-    "f r" '(consult-recent-file :wk "Find recent files")
-    "f p" '(consult-project-buffer :wk "Find Project")
     "f f" '(lsp-format-buffer :wk "LSP Format buffer"))
 
   (airi/leader-keys

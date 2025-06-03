@@ -47,7 +47,19 @@
   (projectile-mode 1)
 
   ;; Set your preferred key bindings here
-  :bind (("C-c p" . projectile-command-map))
+  :general
+  (airi/leader-keys
+    "p"   '(:ignore t :wk "Projectile")
+    "p p" '(projectile-switch-project :wk "Switch project")
+    "p f" '(projectile-find-file :wk "Find file in project")
+    "p d" '(projectile-find-dir :wk "Find directory in project")
+    "p s" '(projectile-ripgrep :wk "Search in project")
+    "p b" '(projectile-switch-to-buffer :wk "Switch buffer in project")
+    "p k" '(projectile-kill-buffers :wk "Kill project buffers")
+    "p i" '(projectile-invalidate-cache :wk "Invalidate cache")
+    "p c" '(projectile-compile-project :wk "Compile project")
+    "p t" '(projectile-test-project :wk "Test project")
+    "p e" '(projectile-edit-dir-locals :wk "Edit dir-locals"))
 
   ;; Additional settings
   :custom

@@ -59,7 +59,7 @@
       [16 48 112 240 112 48 16] nil nil 'center))
 
   (add-hook 'emacs-escape-hook (lambda () (when (bound-and-true-p diff-hl-mode)
-                                           (diff-hl-update-once))))
+                                            (diff-hl-update-once))))
 
   (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))
 

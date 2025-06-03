@@ -72,9 +72,9 @@
   (defvar escape-hook nil
     "Hook run when ESC is pressed (Doom-style).")
   (define-key global-map [escape]
-    (lambda ()
-      (interactive)
-      (run-hook-with-args-until-success 'escape-hook)))
+              (lambda ()
+                (interactive)
+                (run-hook-with-args-until-success 'escape-hook)))
 
   (add-hook 'escape-hook #'my/wdired-exit-on-escape)
 

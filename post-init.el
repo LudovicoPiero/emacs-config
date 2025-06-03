@@ -112,8 +112,8 @@
 
   ;; Set default font
   (when (display-graphic-p)
-  (set-face-attribute 'default nil
-                      :height 130 :weight 'semi-bold :family "Iosevka q"))
+    (set-face-attribute 'default nil
+                        :height 130 :weight 'semi-bold :family "Iosevka q"))
 
   ;; Disable any themes that were enabled early
   (mapc #'disable-theme custom-enabled-themes)
@@ -146,33 +146,33 @@
 
   ;; Add more stuff to recentf-exclude
   (dolist (pattern '(;; Ignore temporary or cache files
-                   "/tmp/"
-                   "/var/tmp/"
-                   "\\.cache/"
-                   ;; Ignore tramp (remote editing) paths
-                   "^/\\(scp\\|rsync\\|ftp\\|telnet\\|adb\\):"
-                   ;; Ignore commits and merge messages
-                   "COMMIT_EDITMSG\\'"
-                   "MERGE_MSG\\'"
-                   ;; Ignore org agenda archive files
-                   "\\.org_archive\\'"
-                   ;; Ignore bookmarks and other generated files
-                   "bookmarks$"
-                   "\\.recentf$"
-                   ".*-autoloads\\.el\\'"
-                   ;; Ignore encrypted files
-                   "\\.gpg\\'"
-                   ;; Ignore image and binary files
-                   "\\.\\(jpg\\|png\\|gif\\|svg\\|xpm\\|pdf\\|exe\\|bin\\|dump\\)\\'"
-                   ;; Ignore elpa/straight build dirs
-                   "/elpa/"
-                   "/straight/"
-                   ;; Ignore node_modules and vendor
-                   "node_modules"
-                   "/vendor/"
-                   ;; Ignore nix store
-                   "^/nix/store/"))
-  (add-to-list 'recentf-exclude pattern))
+                     "/tmp/"
+                     "/var/tmp/"
+                     "\\.cache/"
+                     ;; Ignore tramp (remote editing) paths
+                     "^/\\(scp\\|rsync\\|ftp\\|telnet\\|adb\\):"
+                     ;; Ignore commits and merge messages
+                     "COMMIT_EDITMSG\\'"
+                     "MERGE_MSG\\'"
+                     ;; Ignore org agenda archive files
+                     "\\.org_archive\\'"
+                     ;; Ignore bookmarks and other generated files
+                     "bookmarks$"
+                     "\\.recentf$"
+                     ".*-autoloads\\.el\\'"
+                     ;; Ignore encrypted files
+                     "\\.gpg\\'"
+                     ;; Ignore image and binary files
+                     "\\.\\(jpg\\|png\\|gif\\|svg\\|xpm\\|pdf\\|exe\\|bin\\|dump\\)\\'"
+                     ;; Ignore elpa/straight build dirs
+                     "/elpa/"
+                     "/straight/"
+                     ;; Ignore node_modules and vendor
+                     "node_modules"
+                     "/vendor/"
+                     ;; Ignore nix store
+                     "^/nix/store/"))
+    (add-to-list 'recentf-exclude pattern))
 
   ;; Automatically reload files changed on disk
   (add-hook 'after-init-hook #'global-auto-revert-mode)

@@ -34,49 +34,49 @@
                   ("Python"     (ruff))
                   ("Rust"       (rustfmt))
                   ("Emacs Lisp" (emacs-lisp))
-	                ("JavaScript" (prettierd))
-	                ("JSON"       (prettierd))
-	                ("TypeScript" (prettierd))
-	                ("Vue"        (prettierd))
-	                ("HTML"       (prettierd)))))
+	              ("JavaScript" (prettierd))
+	              ("JSON"       (prettierd))
+	              ("TypeScript" (prettierd))
+	              ("Vue"        (prettierd))
+	              ("HTML"       (prettierd)))))
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
-   :init
+  :init
   (setq lsp-keymap-prefix "C-c l"
         lsp-enable-suggest-server-download nil) ;; disable server downloading suggestions
   :hook (lsp-mode . lsp-enable-which-key-integration))
 
 (use-package lsp-ui
- :commands lsp-ui-mode
- :init
- (setq ;; Sideline
-       lsp-ui-sideline-enable nil
-       lsp-ui-sideline-show-hover t
-       lsp-ui-sideline-show-diagnostics t
-       lsp-ui-sideline-show-code-actions t
-       lsp-ui-sideline-show-hover t
+  :commands lsp-ui-mode
+  :init
+  (setq ;; Sideline
+   lsp-ui-sideline-enable nil
+   lsp-ui-sideline-show-hover t
+   lsp-ui-sideline-show-diagnostics t
+   lsp-ui-sideline-show-code-actions t
+   lsp-ui-sideline-show-hover t
 
-       ;; Headerline
-       lsp-headerline-breadcrumb-enable nil
+   ;; Headerline
+   lsp-headerline-breadcrumb-enable nil
 
-       ;; Peek
-       lsp-ui-peek-enable t
-       lsp-ui-peek-show-directory t
+   ;; Peek
+   lsp-ui-peek-enable t
+   lsp-ui-peek-show-directory t
 
-       ;; Docs
-       lsp-ui-doc-enable t
-       lsp-ui-doc-position 'top
-       lsp-ui-doc-side 'right
-       lsp-ui-doc-delay 0
-       lsp-ui-doc-show-with-mouse nil
+   ;; Docs
+   lsp-ui-doc-enable t
+   lsp-ui-doc-position 'top
+   lsp-ui-doc-side 'right
+   lsp-ui-doc-delay 0
+   lsp-ui-doc-show-with-mouse nil
 
-       ;; imenu
-       lsp-ui-imenu-kind-position 'top
-       lsp-ui-imenu-buffer-position 'right
-       lsp-ui-imenu-window-fix-width nil
-       lsp-ui-imenu-auto-refresh nil
-       lsp-ui-imenu-auto-refresh-delay 1.0))
+   ;; imenu
+   lsp-ui-imenu-kind-position 'top
+   lsp-ui-imenu-buffer-position 'right
+   lsp-ui-imenu-window-fix-width nil
+   lsp-ui-imenu-auto-refresh nil
+   lsp-ui-imenu-auto-refresh-delay 1.0))
 
 ;; Nix shell interpreter detection
 (defun +nix-shell-init-mode ()

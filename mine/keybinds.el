@@ -117,7 +117,8 @@
 
   (airi/leader-keys
     "f" '(:ignore t :wk "Format")
-    "f f" '(lsp-format-buffer :wk "LSP Format buffer"))
+    "f f" '(format-all-region-or-buffer :wk "Format region or buffer")
+    "f l" '(lsp-format-buffer :wk "LSP Format buffer"))
 
   (airi/leader-keys
     "g" '(:ignore t :wk "Magit")
@@ -150,9 +151,9 @@
     "s t" '(hl-todo-rgrep :wk "Search TODOs"))
 
   (airi/leader-keys
-      "v" '(:ignore t :wk "Vterm")
-      "v t" '(vterm-toggle :wk "Vterm Toggle")
-      "v c" '(vterm-toggle-cd :wk "Vterm Toggle CD"))
+    "v" '(:ignore t :wk "Vterm")
+    "v t" '(vterm-toggle :wk "Vterm Toggle")
+    "v c" '(vterm-toggle-cd :wk "Vterm Toggle CD"))
 
   (airi/leader-keys
     "w" '(:ignore t :wk "Windows")
@@ -180,8 +181,7 @@
     "y e" '(yas-expand :wk "Expand snippet")
     "y r" '(yas-reload-all :wk "Reload all snippets")
     "y v" '(yas-visit-snippet-file :wk "Visit snippet file")
-    "y l" '(yas-describe-tables :wk "Describe snippet tables"))
-)
+    "y l" '(yas-describe-tables :wk "Describe snippet tables")))
 
 ;; The undo-fu package is a lightweight wrapper around Emacs' built-in undo
 ;; system, providing more convenient undo/redo functionality.
@@ -216,18 +216,18 @@
   :diminish
   :config
   (setq which-key-side-window-location 'bottom
-	  which-key-sort-order #'which-key-key-order-alpha
-	  which-key-allow-imprecise-window-fit nil
-	  which-key-sort-uppercase-first nil
-	  which-key-add-column-padding 1
-	  which-key-max-display-columns nil
-	  which-key-min-display-lines 6
-	  which-key-side-window-slot -10
-	  which-key-side-window-max-height 0.25
-	  which-key-idle-delay 0.8
-	  which-key-max-description-length 25
-	  which-key-allow-imprecise-window-fit nil
-	  which-key-separator " → " ))
+	    which-key-sort-order #'which-key-key-order-alpha
+	    which-key-allow-imprecise-window-fit nil
+	    which-key-sort-uppercase-first nil
+	    which-key-add-column-padding 1
+	    which-key-max-display-columns nil
+	    which-key-min-display-lines 6
+	    which-key-side-window-slot -10
+	    which-key-side-window-max-height 0.25
+	    which-key-idle-delay 0.8
+	    which-key-max-description-length 25
+	    which-key-allow-imprecise-window-fit nil
+	    which-key-separator " → " ))
 
 (unless (and (eq window-system 'mac)
              (bound-and-true-p mac-carbon-version-string))

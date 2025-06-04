@@ -68,6 +68,14 @@
   ;; Disable saving to custom.el
   (setq custom-file null-device)
 
+  ;; Enable Word Wrapping
+  (global-visual-line-mode 1)
+  (setq word-wrap-by-category t)
+  (setq-default truncate-lines nil)
+  (add-hook 'prog-mode-hook (lambda ()
+                              (setq truncate-lines nil)))
+  (setq display-line-numbers-grow-only t)
+
   ;; Treat built-in packages as upgradable
   (setq package-install-upgrade-built-in t)
 

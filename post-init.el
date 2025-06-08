@@ -112,7 +112,9 @@
   (setq org-return-follows-link t)
 
   ;; Enable relative line numbers globally
-  (global-display-line-numbers-mode t)
+  (setq-default display-line-numbers-type 'relative)
+  (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+    (add-hook hook #'display-line-numbers-mode))
 
   ;; Enable line highlighting in all buffers
   (global-hl-line-mode 1)

@@ -38,6 +38,11 @@
     (setq use-short-answers t)
   (advice-add 'yes-or-no-p :override #'y-or-n-p))
 
+;;; Features, warnings, and errors
+
+;; Disable warnings from the legacy advice API. They aren't useful.
+(setq ad-redefinition-action 'accept)
+
 ;;; Undo/redo
 
 (setq undo-limit (* 13 160000)
@@ -58,11 +63,6 @@
   ;; Ensure use-package is available
   (require 'use-package))
 
-;;; Features, warnings, and errors
-
-;; Disable warnings from the legacy advice API. They aren't useful.
-(setq ad-redefinition-action 'accept)
-
 ;;; Minibuffer
 
 ;; Allow nested minibuffers
@@ -76,7 +76,8 @@
 ;;; User interface
 
 ;; By default, Emacs "updates" its ui more often than it needs to
-(setq idle-update-delay 1.0)
+(setq which-func-update-delay 1.0)
+(setq idle-update-delay which-func-update-delay)  ;; Obsolete in >= 30.1
 
 (defalias #'view-hello-file #'ignore)  ; Never show the hello file
 
@@ -461,8 +462,8 @@
 
 (setq flyspell-issue-welcome-flag nil)
 
-;; Greatly improves flyspell performance by preventing messages from being
-;; displayed for each word when checking the entire buffer.
+;; Improves flyspell performance by preventing messages from being displayed for
+;; each word when checking the entire buffer.
 (setq flyspell-issue-message-flag nil)
 
 ;;; ispell

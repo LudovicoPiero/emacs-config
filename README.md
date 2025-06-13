@@ -1286,8 +1286,7 @@ fc-list : family | sed 's/,/\n/g' | sort -u
   :custom
   (uniquify-buffer-name-style 'reverse)
   (uniquify-separator "•")
-  (uniquify-after-kill-buffer-p t)
-  (uniquify-ignore-buffers-re "^\\*"))
+  (uniquify-after-kill-buffer-p t))
 
 ;; Window dividers separate windows visually. Window dividers are bars that can
 ;; be dragged with the mouse, thus allowing you to easily resize adjacent
@@ -1312,6 +1311,9 @@ fc-list : family | sed 's/,/\n/g' | sort -u
                                "\\|^flycheck_.*"
                                "\\|^flymake_.*"))
 (add-hook 'dired-mode-hook #'dired-omit-mode)
+
+;; Enables visual indication of minibuffer recursion depth after initialization.
+(add-hook 'after-init-hook #'minibuffer-depth-indicate-mode)
 
 ;; Configure Emacs to ask for confirmation before exiting
 (setq confirm-kill-emacs 'y-or-n-p)

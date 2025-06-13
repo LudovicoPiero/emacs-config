@@ -22,11 +22,18 @@
 
 ;;; Code:
 
+;;; Internal variables
+
+(defvar minimal-emacs--backup-gc-cons-threshold gc-cons-threshold
+  "Backup of the original value of `gc-cons-threshold' before startup.")
+
+(setq gc-cons-threshold most-positive-fixnum)
+
 ;;; Variables
 
 (defvar minimal-emacs-ui-features '()
   "List of user interface features to enable in minimal Emacs setup.
-This variable holds a list Emacs UI features that can be enabled:
+This variable holds a list of Emacs UI features that can be enabled:
 - context-menu (Enables the context menu in graphical environments.)
 - tool-bar (Enables the tool bar in graphical environments.)
 - menu-bar (Enables the menu bar in graphical environments.)
@@ -39,14 +46,17 @@ This variable holds a list Emacs UI features that can be enabled:
 (defvar minimal-emacs-debug (bound-and-true-p init-file-debug)
   "Non-nil to enable debug.")
 
-(defvar minimal-emacs-gc-cons-threshold (* 32 1024 1024)
-  "Value to set `gc-cons-threshold' to after Emacs startup.
-Ignored if `minimal-emacs-optimize-startup-gc' is nil.")
-
 (defvar minimal-emacs-optimize-startup-gc t
   "If non-nil, increase `gc-cons-threshold' during startup to reduce pauses.
 After Emacs finishes loading, `gc-cons-threshold' is restored to the value
 stored in `minimal-emacs--restore-gc-cons-threshold'.")
+
+(defvar minimal-emacs-gc-cons-threshold (* 32 1024 1024)
+  "Value to which `gc-cons-threshold' is set after Emacs startup.
+Ignored if `minimal-emacs-optimize-startup-gc' is nil.")
+
+(defvar minimal-emacs-gc-cons-threshold-restore-delay nil
+  "Number of seconds to wait before restoring `gc-cons-threshold'.")
 
 (defvar minimal-emacs-inhibit-redisplay-during-startup nil
   "Suppress redisplay during startup to improve performance.
@@ -74,11 +84,14 @@ When set to non-nil, Emacs will automatically call `package-initialize' and
 `package-refresh-contents' to set up and update the package system.")
 
 (defvar minimal-emacs-setup-native-compilation t
-  "If non-nil, enable and configure native compilation.
-When enabled, this variable sets the following:
+  "Controls whether native compilation settings are enabled during setup.
+When non-nil, the following variables are set to non-nil to enable
+native compilation features:
 - `native-comp-deferred-compilation'
 - `native-comp-jit-compilation'
-- `package-native-compile'")
+- `package-native-compile'
+If nil, these variables are left at their default values and are not
+modified during setup.")
 
 (defvar minimal-emacs-user-directory user-emacs-directory
   "The default value of the `user-emacs-directory' variable.")
@@ -143,22 +156,29 @@ pre-early-init.el, and post-early-init.el.")
 (setq garbage-collection-messages minimal-emacs-debug)
 
 (defun minimal-emacs--restore-gc-cons-threshold ()
-  "Restore `minimal-emacs-gc-cons-threshold'."
-  (setq gc-cons-threshold minimal-emacs-gc-cons-threshold))
+  "Restore `gc-cons-threshold' to `minimal-emacs-gc-cons-threshold'."
+  (if (bound-and-true-p minimal-emacs-gc-cons-threshold-restore-delay)
+      ;; Defer garbage collection during initialization to avoid 2 collections.
+      (run-at-time
+       minimal-emacs-gc-cons-threshold-restore-delay nil
+       (lambda () (setq gc-cons-threshold minimal-emacs-gc-cons-threshold)))
+    (setq gc-cons-threshold minimal-emacs-gc-cons-threshold)))
 
-(when minimal-emacs-optimize-startup-gc
-  (setq gc-cons-threshold most-positive-fixnum)
-  (add-hook 'emacs-startup-hook #'minimal-emacs--restore-gc-cons-threshold 105))
+(if minimal-emacs-optimize-startup-gc
+    (add-hook 'emacs-startup-hook #'minimal-emacs--restore-gc-cons-threshold 105)
+  ;; The user chose not to modify `gc-cons-threshold'.
+  (setq gc-cons-threshold minimal-emacs--backup-gc-cons-threshold))
 
 ;;; Native compilation and Byte compilation
 
 (if (and (featurep 'native-compile)
          (fboundp 'native-comp-available-p)
          (native-comp-available-p))
-    ;; Activate `native-compile'
-    (setq native-comp-deferred-compilation minimal-emacs-setup-native-compilation
-          native-comp-jit-compilation minimal-emacs-setup-native-compilation
-          package-native-compile minimal-emacs-setup-native-compilation)
+    (when minimal-emacs-setup-native-compilation
+      ;; Activate `native-compile'
+      (setq native-comp-deferred-compilation t
+            native-comp-jit-compilation t
+            package-native-compile t))
   ;; Deactivate the `native-compile' feature if it is not available
   (setq features (delq 'native-compile features)))
 
@@ -227,8 +247,13 @@ pre-early-init.el, and post-early-init.el.")
   ;; `inhibit-startup-screen', but it would still initialize anyway.
   (advice-add 'display-startup-screen :override #'ignore)
 
-  ;; Shave seconds off startup time by starting the scratch buffer in
-  ;; `fundamental-mode'
+  ;; The initial buffer is created during startup even in non-interactive
+  ;; sessions, and its major mode is fully initialized. Modes like `text-mode',
+  ;; `org-mode', or even the default `lisp-interaction-mode' load extra packages
+  ;; and run hooks, which can slow down startup.
+  ;;
+  ;; Using `fundamental-mode' for the initial buffer to avoid unnecessary
+  ;; startup overhead.
   (setq initial-major-mode 'fundamental-mode
         initial-scratch-message nil)
 
@@ -427,9 +452,9 @@ this stage of initialization."
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("gnu" . "https://elpa.gnu.org/packages/")
                          ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
-(customize-set-variable 'package-archive-priorities '(("gnu"    . 99)
-                                                      ("nongnu" . 80)
-                                                      ("melpa"  . 70)))
+(setq package-archive-priorities '(("gnu"    . 99)
+                                   ("nongnu" . 80)
+                                   ("melpa"  . 70)))
 
 ;;; Load post-early-init.el
 (minimal-emacs-load-user-init "post-early-init.el")

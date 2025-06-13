@@ -96,6 +96,7 @@
 (setq custom-buffer-done-kill t)
 
 (setq whitespace-line-column nil)  ; Use the value of `fill-column'.
+(setq whitespace-line-column nil)  ; Use the value of `fill-column'.
 
 ;; Can be activated with `display-line-numbers-mode'
 (setq-default display-line-numbers-width 3)

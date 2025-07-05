@@ -1313,6 +1313,9 @@ fc-list : family | sed 's/,/\n/g' | sort -u
 (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
   (add-hook hook #'display-line-numbers-mode))
 
+;; Set the maximum level of syntax highlighting for Tree-sitter modes
+(setq treesit-font-lock-level 4)
+
 (use-package which-key
   :ensure nil ; builtin
   :commands which-key-mode

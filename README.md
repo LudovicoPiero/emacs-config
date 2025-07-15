@@ -22,7 +22,7 @@ It is:
 - **Customizable:** Designed to be extended, not replaced.
 - **Fast:** Startup performance is a primary goal.
 
-## Customizations
+Emacs comes with many well-designed defaults, but it also retains some less-than-ideal settings, often due to historical constraints or legacy compatibility. The purpose of *minimal-emacs.d* is to offer refined defaults that improve both usability and performance, replacing long-standing Emacs settings that no longer serve modern workflows well.
 
 All user-specific settings and additions in this configuration are layered **on top of** the original `minimal-emacs.d` core. That means:
 - The core `init.el` and `early-init.el` are retained as upstream base files (or adapted directly if needed).

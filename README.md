@@ -12,7 +12,11 @@
 
 The **minimal-emacs.d** project is a lightweight Emacs starter (`init.el` and `early-init.el`) that **avoids the complexity of Doom Emacs or Spacemacs**, while providing a solid, optimized baseline for your configuration.
 
-It includes:
+The *minimal-emacs.d* project is:
+- **Minimal yet effective:** A solid starting point.
+- **Better defaults:** Improved settings for usability, UI, garbage collection, and built-in packages.
+- **0 packages loaded / No forced modes:** Unlike other frameworks or starter kits, *minimal-emacs.d* does not impose modes or require packages. **You have full control** over which global or minor modes to enable and which packages to load.
+- **Customizable foundation:** Designed to be extended, not replaced. This README.md offers extensive recommendations for customizing your *minimal-emacs.d* configuration. (Reminder: [Never modify init.el and early-init.el. Modify these instead...](#customizations-never-modify-initel-and-early-initel-modify-these-instead))
 
 - `early-init.el`: Loaded before the GUI and packages are initialized. Great for setting up performance-related and UI-related parameters.
 - `init.el`: Loaded after GUI init, used for personal package loading, keybindings, and mode configurations.

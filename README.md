@@ -6,7 +6,11 @@
 
 ---
 
-## About minimal-emacs.d
+If this enhances your workflow, please show your support by **⭐ starring minimal-emacs.d GitHub** to help more users discover its benefits.
+
+<p align="center">
+<img src="https://jamescherti.com/misc/minimal-emacs.d.png" width="50%" />
+</p>
 
 > The following is adapted from the original [minimal-emacs.d README](https://github.com/jamescherti/minimal-emacs.d) to give you context on its goals and philosophy:
 

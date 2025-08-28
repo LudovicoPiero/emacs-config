@@ -6,7 +6,7 @@
 
 ---
 
-If this enhances your workflow, please show your support by **⭐ starring minimal-emacs.d GitHub** to help more users discover its benefits.
+If this enhances your workflow, please show your support by **⭐ starring minimal-emacs.d GitHub** to help more Emacs users discover its benefits.
 
 <p align="center">
 <img src="https://jamescherti.com/misc/minimal-emacs.d.png" width="50%" />

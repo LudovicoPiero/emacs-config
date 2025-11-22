@@ -111,11 +111,11 @@
   (lsp-nix-nixd-formatting-command [ "nixfmt" "--strict" ])
   (lsp-nix-nixd-nixpkgs-expr "import <nixpkgs> { }")
   (lsp-nix-nixd-nixos-options-expr
-   (concat "(builtins.getFlake \"/home/airi/Code/nixos\")"
+   (concat "(builtins.getFlake \"/home/lain/Code/nixos\")"
            ".nixosConfigurations.sforza.options"))
-  (lsp-nix-nixd-home-manager-options-expr
-   (concat "(builtins.getFlake \"/home/airi/Code/nvim-flake\")"
-           ".homeConfigurations.\"airi@sforza\".options"))
+  ;; (lsp-nix-nixd-home-manager-options-expr
+  ;;  (concat "(builtins.getFlake \"/home/lain/Code/nvim-flake\")"
+  ;;          ".homeConfigurations.\"airi@sforza\".options"))
 
   :hook (nix-mode . lsp-deferred)
   :interpreter ("\\(?:cached-\\)?nix-shell" . +nix-shell-init-mode))

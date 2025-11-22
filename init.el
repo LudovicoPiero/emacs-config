@@ -38,15 +38,11 @@
     (setq use-short-answers t)
   (advice-add 'yes-or-no-p :override #'y-or-n-p))
 
-;;; Features, warnings, and errors
-
-;; Disable warnings from the legacy advice API. They aren't useful.
-(setq ad-redefinition-action 'accept)
-
 ;;; Undo/redo
 
-;; Disable warnings from the legacy advice API. They aren't useful.
-(setq ad-redefinition-action 'accept)
+(setq undo-limit (* 13 160000)
+      undo-strong-limit (* 13 240000)
+      undo-outer-limit (* 13 24000000))
 
 ;;; package.el
 
@@ -96,7 +92,6 @@
 (setq custom-buffer-done-kill t)
 
 (setq whitespace-line-column nil)  ; Use the value of `fill-column'.
-(setq whitespace-line-column nil)  ; Use the value of `fill-column'.
 
 ;; Can be activated with `display-line-numbers-mode'
 (setq-default display-line-numbers-width 3)
@@ -111,8 +106,6 @@
 ;; Position underlines at the descent line instead of the baseline.
 (setq x-underline-at-descent-line t)
 
-(setq tramp-verbose 1)
-(setq tramp-completion-reread-directory-timeout 50)
 (setq remote-file-name-inhibit-cache 50)
 
 ;; Automatically rescan the buffer for Imenu entries when `imenu' is invoked
@@ -128,6 +121,11 @@
 ;; This setting forces Emacs to save bookmarks immediately after each change.
 ;; Benefit: you never lose bookmarks if Emacs crashes.
 (setq bookmark-save-flag 1)
+
+;;; tramp
+
+(setq tramp-verbose 1)
+(setq tramp-completion-reread-directory-timeout 50)
 
 ;;; Files
 

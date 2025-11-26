@@ -1,4 +1,15 @@
-;;; completion.el --- Completion framework -*- lexical-binding: t; -*-
+;;; completion-setup.el --- Completion framework -*- lexical-binding: t; -*-
+
+;; Keywords: completion, corfu, vertico, orderless, embark, consult
+
+;;; Commentary:
+;;
+;; Configures the Emacs completion frameworks, including Corfu, Cape, Vertico,
+;; Orderless, Marginalia, Embark, and Consult for enhanced minibuffer and
+;; in-buffer completion.
+;;
+
+;;; Code:
 
 ;; In-buffer completion (Corfu)
 (use-package corfu
@@ -130,3 +141,6 @@
    consult--source-recent-file consult--source-project-recent-file
    :preview-key '(:debounce 0.4 any))
   (setq consult-narrow-key "<"))
+
+(provide 'completion-setup)
+;;; completion-setup.el ends here

@@ -1,4 +1,14 @@
-;;; help.el --- Documentation tools -*- lexical-binding: t; -*-
+;;; help-setup.el --- Documentation tools -*- lexical-binding: t; -*-
+
+;; Keywords: help, documentation, helpful
+
+;;; Commentary:
+;;
+;; Configures various help and documentation tools, such as Helpful, to improve
+;; access to Emacs's built-in help system.
+;;
+
+;;; Code:
 
 (use-package helpful
   :ensure t
@@ -11,3 +21,6 @@
   ([remap describe-variable] . helpful-variable)
   :custom
   (helpful-max-buffers 7))
+
+(provide 'help-setup)
+;;; help-setup.el ends here

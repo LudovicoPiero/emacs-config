@@ -1,5 +1,15 @@
 ;;; pre-early-init.el --- DESCRIPTION -*- no-byte-compile: t; lexical-binding: t; -*-
 
+;; Keywords: configuration, early-init, startup
+
+;;; Commentary:
+;;
+;; Contains very early Emacs initialization settings, typically before package
+;; loading.
+;;
+
+;;; Code:
+
 (setq debug-on-error t)
 
 ;;; Reducing clutter in ~/.emacs.d by redirecting files to ~/.emacs.d/var/
@@ -10,3 +20,6 @@
 ;; makes minimal-emacs.d call the built-in package manager. Since Elpaca will
 ;; replace the package manager, there is no need to call it.
 (setq minimal-emacs-package-initialize-and-refresh nil)
+
+(provide 'pre-early-init)
+;;; pre-early-init.el ends here

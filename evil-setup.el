@@ -1,4 +1,14 @@
-;;; evil.el --- Vim emulation & Keybindings -*- lexical-binding: t; -*-
+;;; evil-setup.el --- Vim emulation & Keybindings -*- lexical-binding: t; -*-
+
+;; Keywords: evil, vim, keybindings, undo
+
+;;; Commentary:
+;;
+;; Configures Evil mode for Vim emulation and defines custom keybindings
+;; and related packages.
+;;
+
+;;; Code:
 
 (use-package undo-fu
   :ensure t
@@ -171,3 +181,6 @@
       "j"  '(:ignore t :which-key "jump")
       "jj" '(avy-goto-char-timer :which-key "Jump char")
       "jl" '(avy-goto-line :which-key "Jump line"))))
+
+(provide 'evil-setup)
+;;; evil-setup.el ends here

@@ -1,4 +1,7 @@
-;;; eglot.el --- Eglot configs -*- lexical-binding: t; -*-
+;;; lsp-setup.el --- LSP setup -*- lexical-binding: t; -*-- Keywords: lsp, eglot, apheleia, python, nix--;; Commentary:;;
+;; Configures Language Server Protocol (LSP) clients like Eglot, along with
+;; formatting tools like Apheleia.
+;;; Code:
 
 ;; FORCE update jsonrpc.
 ;; Eglot requires 1.0.26+, but Emacs 29 ships with 1.0.25.
@@ -69,3 +72,6 @@
                              nil               ; no redisplay
                              "check" "--fix" "--stdin-filename" (buffer-file-name) "-"))
       (message "Ruff fix applied."))))
+
+(provide 'lsp-setup)
+;;; lsp-setup.el ends here

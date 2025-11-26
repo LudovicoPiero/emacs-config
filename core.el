@@ -1,5 +1,15 @@
 ;;; core.el --- Core system configuration -*- lexical-binding: t; -*-
 
+;; Keywords: core, system, configuration, packages, files
+
+;;; Commentary:
+;;
+;; Contains core Emacs system configurations, including package management,
+;; auto-revert, recent files, and other fundamental settings.
+;;
+
+;;; Code:
+
 ;; Allow Emacs to upgrade built-in packages, such as Org mode
 (setq package-install-upgrade-built-in t)
 
@@ -82,3 +92,6 @@
         (setq args nil)))
     (when args
       (setq dired-listing-switches args))))
+
+(provide 'core)
+;;; core.el ends here

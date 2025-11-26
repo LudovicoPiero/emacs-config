@@ -1,5 +1,15 @@
 ;;; lang.el --- Language specific configs -*- lexical-binding: t; -*-
 
+;; Keywords: languages, org-mode, markdown, tree-sitter, flymake
+
+;;; Commentary:
+;;
+;; Contains configurations for various programming and markup languages,
+;; including Org Mode, Markdown, and Tree-sitter.
+;;
+
+;;; Code:
+
 ;; Org Mode
 (use-package org
   :ensure t
@@ -56,7 +66,7 @@
   (flymake-no-changes-timeout 0.5)
   (flymake-start-on-save-buffer t)
   (flymake-proc-compilation-regexp
-   '("^\\([^ :]+\\):\\([0-9]+\\):\\([0-9]+\\): \\(?:.*\\)$"
+   '("^\\([^ :]+\):\\([0-9]+\):\\([0-9]+\): \\(?:.*\\)$"
      1 2 3))
 
   :init
@@ -67,3 +77,6 @@
     :keymaps 'flymake-mode-map
     "]e" 'flymake-goto-next-error
     "[e" 'flymake-goto-prev-error))
+
+(provide 'lang)
+;;; lang.el ends here

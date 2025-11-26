@@ -1,5 +1,15 @@
 ;;; pre-init.el --- DESCRIPTION -*- no-byte-compile: t; lexical-binding: t; -*-
 
+;; Keywords: configuration, startup, packages, elpaca
+
+;;; Commentary:
+;;
+;; Handles early Emacs initialization tasks, such as bootstrapping the Elpaca
+;; package manager.
+;;
+
+;;; Code:
+
 ;; Elpaca bootstrap
 (defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
@@ -27,7 +37,7 @@
                                         (or (plist-get order :ref) "--"))))
                   (emacs (concat invocation-directory invocation-name))
                   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                                        "--eval" "(byte-recompile-directory \".\" 0 'force)"))) 
                   ((require 'elpaca))
                   ((elpaca-generate-autoloads "elpaca" repo)))
             (progn (message "%s" (buffer-string)) (kill-buffer buffer))
@@ -43,3 +53,6 @@
 ;; (elpaca elpaca-use-package)
 (elpaca elpaca-use-package
   (elpaca-use-package-mode))
+
+(provide 'pre-init)
+;;; pre-init.el ends here

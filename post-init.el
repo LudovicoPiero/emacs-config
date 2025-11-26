@@ -1,5 +1,14 @@
 ;;; post-init.el --- DESCRIPTION -*- no-byte-compile: t; lexical-binding: t; -*-
 
+;; Keywords: configuration, startup
+
+;;; Commentary:
+;;
+;; Loads various user configuration files after Emacs initialization.
+;;
+
+;;; Code:
+
 ;; Load Core Systems first (compilation, file handling)
 (minimal-emacs-load-user-init "core.el")
 
@@ -26,3 +35,6 @@
 
 ;; Load Git Configuration
 (minimal-emacs-load-user-init "git-setup.el")
+
+(provide 'post-init)
+;;; post-init.el ends here

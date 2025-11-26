@@ -1,5 +1,15 @@
 ;;; ui.el --- Visual configuration -*- lexical-binding: t; -*-
 
+;; Keywords: ui, theme, font, modeline
+
+;;; Commentary:
+;;
+;; Configures the Emacs user interface, including fonts, themes, modeline,
+;; and other visual elements.
+;;
+
+;;; Code:
+
 ;; Fonts
 (set-face-attribute 'default nil
                     :height 130 :weight 'semi-bold :family "Iosevka q")
@@ -68,3 +78,6 @@
 (use-package rainbow-delimiters
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
+
+(provide 'ui)
+;;; ui.el ends here

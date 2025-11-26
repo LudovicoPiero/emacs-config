@@ -1,5 +1,15 @@
 ;;; editing.el --- Editing tools -*- lexical-binding: t; -*-
 
+;; Keywords: editing, snippets, whitespace
+
+;;; Commentary:
+;;
+;; Configures various editing tools, including whitespace handling, snippets,
+;; and general editing enhancements.
+;;
+
+;;; Code:
+
 (use-package stripspace
   :ensure t
   :commands stripspace-local-mode
@@ -44,3 +54,6 @@
   :config
   (add-to-list 'yas-snippet-dirs (expand-file-name "snippets" minimal-emacs-user-directory))
   (yas-reload-all))
+
+(provide 'editing)
+;;; editing.el ends here

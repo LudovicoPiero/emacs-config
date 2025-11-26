@@ -1,4 +1,14 @@
-;;; git.el --- Git configuration -*- lexical-binding: t; -*-
+;;; git-setup.el --- Git configuration -*- lexical-binding: t; -*-
+
+;; Keywords: git, magit, version-control
+
+;;; Commentary:
+;;
+;; Configures Git-related tools and integrations, primarily Magit, for version
+;; control within Emacs.
+;;
+
+;;; Code:
 
 ;; Magit requires a newer version of transient than what is built-in.
 (use-package transient
@@ -31,3 +41,6 @@
   :ensure t
   :after magit
   :config (magit-todos-mode 1))
+
+(provide 'git-setup)
+;;; git-setup.el ends here

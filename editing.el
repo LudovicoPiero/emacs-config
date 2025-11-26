@@ -55,5 +55,10 @@
   (add-to-list 'yas-snippet-dirs (expand-file-name "snippets" minimal-emacs-user-directory))
   (yas-reload-all))
 
+;; (use-package copilot
+;;   :vc (:url "https://github.com/copilot-emacs/copilot.el"
+;;             :rev :newest
+;;             :branch "main"))
+
 (provide 'editing)
 ;;; editing.el ends here

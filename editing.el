@@ -1,0 +1,37 @@
+;;; editing.el --- Editing tools -*- lexical-binding: t; -*-
+
+(use-package stripspace
+  :ensure t
+  :commands stripspace-local-mode
+  :hook (find-file . stripspace-local-mode)
+  :custom
+  (stripspace-only-if-initially-clean nil)
+  (stripspace-restore-column t)
+
+  :init
+  ;; WRAPPER: Wait for 'general' to load before defining keys
+  (with-eval-after-load 'general
+    (my-leader-def
+      "ts" '(stripspace-local-mode :which-key "Toggle Strip Space"))))
+
+;; Snippets
+(use-package yasnippet-snippets
+  :ensure t
+  :after yasnippet)
+
+(use-package yasnippet
+  :ensure t
+  :commands (yas-minor-mode yas-global-mode)
+  :hook (elpaca-after-init . yas-global-mode)
+  :custom
+  (yas-also-auto-indent-first-line t)
+  (yas-also-indent-empty-lines t)
+  (yas-snippet-revival nil)
+  (yas-wrap-around-region nil)
+  :init
+  (setq yas-verbosity 0)
+
+  ;; Keybind to Insert Snippet manually
+  (with-eval-after-load 'general
+  (my-leader-def
+    "is" '(yas-insert-snippet :which-key "Insert snippet"))))

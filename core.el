@@ -1,0 +1,84 @@
+;;; core.el --- Core system configuration -*- lexical-binding: t; -*-
+
+;; Allow Emacs to upgrade built-in packages, such as Org mode
+(setq package-install-upgrade-built-in t)
+
+;; Configure Emacs to ask for confirmation before exiting
+(setq confirm-kill-emacs 'y-or-n-p)
+
+;; Native compilation (compile-angel)
+(use-package compile-angel
+  :demand t
+  :ensure t
+  :custom
+  (compile-angel-verbose t)
+  :config
+  ;; Update this list if you want to exclude your new split files,
+  ;; or let them compile (recommended).
+  (push "/init.el" compile-angel-excluded-files)
+  (push "/early-init.el" compile-angel-excluded-files)
+  (push "/pre-init.el" compile-angel-excluded-files)
+  (push "/post-init.el" compile-angel-excluded-files)
+  (compile-angel-on-load-mode 1))
+
+;; Auto-revert buffers when files change on disk
+(use-package autorevert
+  :ensure nil
+  :commands (auto-revert-mode global-auto-revert-mode)
+  :hook (elpaca-after-init . global-auto-revert-mode)
+  :custom
+  (auto-revert-interval 3)
+  (auto-revert-remote-files nil)
+  (auto-revert-use-notify t)
+  (auto-revert-avoid-polling nil)
+  (auto-revert-verbose t))
+
+;; Recent files history
+(use-package recentf
+  :ensure nil
+  :commands (recentf-mode recentf-cleanup)
+  :hook (elpaca-after-init . recentf-mode)
+  :custom
+  (recentf-auto-cleanup (if (daemonp) 300 'never))
+  (recentf-exclude
+   (list "\\.tar$" "\\.tbz2$" "\\.tbz$" "\\.tgz$" "\\.bz2$"
+         "\\.bz$" "\\.gz$" "\\.gzip$" "\\.xz$" "\\.zip$"
+         "\\.7z$" "\\.rar$"
+         "COMMIT_EDITMSG\\'"
+         "\\.\\(?:gz\\|gif\\|svg\\|png\\|jpe?g\\|bmp\\|xpm\\)$"
+         "-autoloads\\.el$" "autoload\\.el$"))
+  :config
+  (add-hook 'kill-emacs-hook #'recentf-cleanup -90))
+
+;; Minibuffer history
+(use-package savehist
+  :ensure nil
+  :commands (savehist-mode savehist-save)
+  :hook (elpaca-after-init . savehist-mode)
+  :custom
+  (savehist-autosave-interval 600)
+  (savehist-additional-variables
+   '(kill-ring register-alist mark-ring global-mark-ring search-ring regexp-search-ring)))
+
+;; Save cursor place in files
+(use-package saveplace
+  :ensure nil
+  :commands (save-place-mode save-place-local-mode)
+  :hook (elpaca-after-init . save-place-mode)
+  :custom
+  (save-place-limit 400))
+
+;; Auto-save configuration
+(setq auto-save-default t)
+(setq auto-save-interval 300)
+(setq auto-save-timeout 30)
+
+;; Dired configuration
+(with-eval-after-load 'dired
+  (let ((args "--group-directories-first -ahlv"))
+    (when (or (eq system-type 'darwin) (eq system-type 'berkeley-unix))
+      (if-let* ((gls (executable-find "gls")))
+          (setq insert-directory-program gls)
+        (setq args nil)))
+    (when args
+      (setq dired-listing-switches args))))

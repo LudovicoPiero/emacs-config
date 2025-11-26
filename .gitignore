@@ -1,20 +1,10 @@
-!README.md
-!early-init.el
-!init.el
-
-*.elc
-var/
-/snippets/
-
-# Created by https://www.toptal.com/developers/gitignore/api/direnv,emacs,vim,git,patch
-# Edit at https://www.toptal.com/developers/gitignore?templates=direnv,emacs,vim,git,patch
-
-### direnv ###
-.direnv
-.envrc
+# Created by https://www.toptal.com/developers/gitignore/api/vim,emacs
+# Edit at https://www.toptal.com/developers/gitignore?templates=vim,emacs
 
 ### Emacs ###
 # -*- mode: gitignore; -*-
+eln-cache/
+var/
 *~
 \#*\#
 /.emacs.desktop
@@ -64,24 +54,6 @@ flycheck_*.el
 /network-security.data
 
 
-### Git ###
-# Created by git for backups. To disable backups in Git:
-# $ git config --global mergetool.keepBackup false
-*.orig
-
-# Created by git when using merge tools for conflicts
-*.BACKUP.*
-*.BASE.*
-*.LOCAL.*
-*.REMOTE.*
-*_BACKUP_*.txt
-*_BASE_*.txt
-*_LOCAL_*.txt
-*_REMOTE_*.txt
-
-### Patch ###
-*.rej
-
 ### Vim ###
 # Swap
 [._]*.s[a-v][a-z]
@@ -102,4 +74,4 @@ tags
 # Persistent undo
 [._]*.un~
 
-# End of https://www.toptal.com/developers/gitignore/api/direnv,emacs,vim,git,patch
+# End of https://www.toptal.com/developers/gitignore/api/vim,emacs

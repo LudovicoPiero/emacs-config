@@ -94,11 +94,13 @@
 
   ;; Define bindings using General (SPC leader)
   (my-leader-def
-    ;; Buffer
+    ;; Buffers
+    "b"  '(:ignore t :which-key "buffer")
     "bb" '(consult-buffer :which-key "Switch buffer")
-    "bB" '(consult-buffer-other-window :which-key "Buffer other win")
-    "bm" '(consult-bookmark :which-key "Bookmark")
-    "bp" '(consult-project-buffer :which-key "Project buffer")
+    "bk" '(kill-current-buffer :which-key "Kill buffer")
+    "br" '(revert-buffer :which-key "Revert buffer")
+    "bn" '(next-buffer :which-key "Next buffer")
+    "bp" '(previous-buffer :which-key "Prev buffer")
 
     ;; Search group (s)
     "s"  '(:ignore t :which-key "search")

@@ -34,6 +34,14 @@
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   :custom
+  (evil-default-cursor       'box)  ; Fallback
+  (evil-normal-state-cursor '(box "purple"))
+  (evil-insert-state-cursor '(box "orange"))
+  (evil-visual-state-cursor '(box "grey"))
+  (evil-motion-state-cursor  'box)  ; Motion mode
+  (evil-replace-state-cursor 'box)  ; Replace mode (usually underscore)
+  (evil-operator-state-cursor 'box) ; Operator pending
+  (evil-emacs-state-cursor   'box)  ; Emacs mode
   (evil-ex-visual-char-range t)
   (evil-ex-search-vim-style-regexp t)
   (evil-split-window-below t)
@@ -99,14 +107,6 @@
     "."   '(find-file :which-key "Find file")
     "u"   '(universal-argument :which-key "Universal arg")
 
-    ;; Buffers
-    "b"  '(:ignore t :which-key "buffer")
-    "bb" '(consult-buffer :which-key "Switch buffer")
-    "bk" '(kill-current-buffer :which-key "Kill buffer")
-    "br" '(revert-buffer :which-key "Revert buffer")
-    "bn" '(next-buffer :which-key "Next buffer")
-    "bp" '(previous-buffer :which-key "Prev buffer")
-
     ;; Code / LSP (Eglot & Apheleia)
     "c"  '(:ignore t :which-key "code")
     "ca" '(eglot-code-actions :which-key "Code actions")
@@ -124,14 +124,6 @@
     "fr" '(consult-recent-file :which-key "Recent files")
     "fc" '(copy-file :which-key "Copy file")
     "fR" '(rename-file :which-key "Rename/Move file")
-
-    ;; Search (Consult)
-    "s"  '(:ignore t :which-key "search")
-    "ss" '(consult-line :which-key "Search line")
-    "sg" '(consult-ripgrep :which-key "Ripgrep")
-    "sf" '(consult-find :which-key "Find file (fd)")
-    "si" '(consult-imenu :which-key "Imenu symbols")
-    "sh" '(consult-history :which-key "Command history")
 
     ;; Help (Helpful)
     "h"  '(:ignore t :which-key "help")

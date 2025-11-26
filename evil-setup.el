@@ -90,7 +90,6 @@
 
 (use-package general
   :ensure t
-  ;; :after evil
   :config
   (with-eval-after-load 'evil
     (general-evil-setup))

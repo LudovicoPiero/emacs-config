@@ -19,6 +19,14 @@
   :ensure t
   :after yasnippet)
 
+(use-package doom-snippets
+  :ensure (:host github :repo "doomemacs/snippets" :files ("*.el" "snippets"))
+  :after yasnippet
+  :config
+  (add-to-list 'yas-snippet-dirs
+               (file-name-concat (file-name-directory (locate-library "doom-snippets")) "snippets"))
+  (yas-reload-all))
+
 (use-package yasnippet
   :ensure t
   :commands (yas-minor-mode yas-global-mode)
@@ -30,8 +38,9 @@
   (yas-wrap-around-region nil)
   :init
   (setq yas-verbosity 0)
-
-  ;; Keybind to Insert Snippet manually
   (with-eval-after-load 'general
-  (my-leader-def
-    "is" '(yas-insert-snippet :which-key "Insert snippet"))))
+    (my-leader-def
+      "is" '(yas-insert-snippet :which-key "Insert snippet")))
+  :config
+  (add-to-list 'yas-snippet-dirs (expand-file-name "snippets" minimal-emacs-user-directory))
+  (yas-reload-all))

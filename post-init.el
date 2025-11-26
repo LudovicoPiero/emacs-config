@@ -4,7 +4,7 @@
 (minimal-emacs-load-user-init "core.el")
 
 ;; Load Evil Mode (Must load before some other modes if keybindings depend on it)
-(minimal-emacs-load-user-init "evil.el")
+(minimal-emacs-load-user-init "evil-setup.el")
 
 ;; Load UI components (Themes, Fonts)
 (minimal-emacs-load-user-init "ui.el")
@@ -13,16 +13,16 @@
 (minimal-emacs-load-user-init "editing.el")
 
 ;; Load Completion Framework (Vertico, Corfu)
-(minimal-emacs-load-user-init "completion.el")
+(minimal-emacs-load-user-init "completion-setup.el")
 
 ;; Load Help Tools
-(minimal-emacs-load-user-init "help.el")
+(minimal-emacs-load-user-init "help-setup.el")
 
 ;; Load Language Specifics
 (minimal-emacs-load-user-init "lang.el")
 
 ;; Load LSP Configuration
-(minimal-emacs-load-user-init "eglot.el")
+(minimal-emacs-load-user-init "lsp-setup.el")
 
 ;; Load Git Configuration
-(minimal-emacs-load-user-init "git.el")
+(minimal-emacs-load-user-init "git-setup.el")

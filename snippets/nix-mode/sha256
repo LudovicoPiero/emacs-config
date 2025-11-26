@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Insert sha256 template
-# key: sha
-# --
-sha256 = "0000000000000000000000000000000000000000000000000000";

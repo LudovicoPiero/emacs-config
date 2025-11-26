@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Insert modSha256 template for go projects
-# key: msh
-# --
-modSha256 = "0000000000000000000000000000000000000000000000000000";

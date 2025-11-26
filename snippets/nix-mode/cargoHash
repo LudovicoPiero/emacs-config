@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Insert CargoHash template
-# key: cha
-# --
-cargoHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";

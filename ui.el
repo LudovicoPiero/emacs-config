@@ -114,6 +114,5 @@
     (when args
       (setq dired-listing-switches args))))
 
-
 (provide 'ui)
 ;;; ui.el ends here

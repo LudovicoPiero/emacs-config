@@ -13,12 +13,12 @@
   :custom
   (compile-angel-verbose t)
   :config
-  ;; Update this list if you want to exclude your new split files,
-  ;; or let them compile (recommended).
   (push "/init.el" compile-angel-excluded-files)
   (push "/early-init.el" compile-angel-excluded-files)
   (push "/pre-init.el" compile-angel-excluded-files)
   (push "/post-init.el" compile-angel-excluded-files)
+  (push "/pre-early-init.el" compile-angel-excluded-files)
+  (push "/post-early-init.el" compile-angel-excluded-files)
   (compile-angel-on-load-mode 1))
 
 ;; Auto-revert buffers when files change on disk

@@ -106,16 +106,6 @@
     "."   '(find-file :which-key "Find file")
     "u"   '(universal-argument :which-key "Universal arg")
 
-    ;; Code / LSP (Eglot & Apheleia)
-    "c"  '(:ignore t :which-key "code")
-    "ca" '(eglot-code-actions :which-key "Code actions")
-    "cr" '(eglot-rename :which-key "Rename symbol")
-    "cf" '(apheleia-format-buffer :which-key "Format buffer") ; Using Apheleia
-    "cd" '(eglot-find-declaration :which-key "Find declaration")
-    "ci" '(eglot-find-implementation :which-key "Find implementation")
-    "cx" '(consult-flymake :which-key "List errors") ; Flymake list
-    "ce" '(flymake-show-buffer-diagnostics :which-key "Buffer diagnostics")
-
     ;; Files
     "f"  '(:ignore t :which-key "file")
     "ff" '(find-file :which-key "Find file")

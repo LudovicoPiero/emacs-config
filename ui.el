@@ -28,6 +28,10 @@
   (doom-themes-treemacs-config)
   (doom-themes-org-config))
 
+(use-package doom-modeline
+  :ensure t
+  :hook (elpaca-after-init . doom-modeline-mode))
+
 ;; Vim-like Tab Bar
 (use-package vim-tab-bar
   :ensure t

@@ -16,6 +16,9 @@
   :ensure t
   :mode "\\.nix\\'"
   :hook (nix-mode . eglot-ensure))
+(use-package envrc
+  :ensure t
+  :hook (elpaca-after-init . envrc-global-mode))
 
 ;; 1. Register basedpyright as the LSP for python-mode
 ;; (Not strictly necessary if using a very new Emacs, but good for safety)

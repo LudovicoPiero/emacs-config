@@ -83,15 +83,5 @@
 (setq auto-save-interval 300)
 (setq auto-save-timeout 30)
 
-;; Dired configuration
-(with-eval-after-load 'dired
-  (let ((args "--group-directories-first -ahlv"))
-    (when (or (eq system-type 'darwin) (eq system-type 'berkeley-unix))
-      (if-let* ((gls (executable-find "gls")))
-          (setq insert-directory-program gls)
-        (setq args nil)))
-    (when args
-      (setq dired-listing-switches args))))
-
 (provide 'core)
 ;;; core.el ends here

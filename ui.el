@@ -79,5 +79,41 @@
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
+(use-package highlight-indent-guides
+  :ensure t
+  :hook (prog-mode . highlight-indent-guides-mode)
+  :custom
+  (highlight-indent-guides-method 'character) ;; Use a character like |
+  (highlight-indent-guides-character ?\u2502) ;; The character to use
+  (highlight-indent-guides-responsive 'top)   ;; Highlight the current block
+  (highlight-indent-guides-delay 0))
+
+(use-package evil-goggles
+  :ensure t
+  :after evil
+  :config
+  (evil-goggles-mode)
+  ;; Use diff faces so it looks standard
+  (evil-goggles-use-diff-faces))
+
+(use-package rainbow-mode
+  :ensure t
+  :hook ((prog-mode . rainbow-mode)
+         (conf-mode . rainbow-mode)))
+
+;; Dired configuration
+(use-package nerd-icons-dired
+  :ensure t
+  :hook (dired-mode . nerd-icons-dired-mode))
+(with-eval-after-load 'dired
+  (let ((args "--group-directories-first -ahlv"))
+    (when (or (eq system-type 'darwin) (eq system-type 'berkeley-unix))
+      (if-let* ((gls (executable-find "gls")))
+          (setq insert-directory-program gls)
+        (setq args nil)))
+    (when args
+      (setq dired-listing-switches args))))
+
+
 (provide 'ui)
 ;;; ui.el ends here

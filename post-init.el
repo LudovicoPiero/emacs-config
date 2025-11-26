@@ -27,9 +27,6 @@
 ;; Load Help Tools
 (minimal-emacs-load-user-init "help-setup.el")
 
-;; Load Language Specifics
-(minimal-emacs-load-user-init "lang.el")
-
 ;; Load LSP Configuration
 (minimal-emacs-load-user-init "lsp-setup.el")
 

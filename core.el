@@ -83,5 +83,40 @@
 (setq auto-save-interval 300)
 (setq auto-save-timeout 30)
 
+;; Org Mode
+(use-package org
+  :ensure t
+  :commands (org-mode org-version)
+  :mode ("\\.org\\'" . org-mode)
+  :custom
+  (org-hide-leading-stars t)
+  (org-startup-indented t)
+  (org-adapt-indentation nil)
+  (org-edit-src-content-indentation 0)
+  (org-startup-truncated t))
+
+(use-package org-modern
+  :ensure t
+  :hook ((org-mode . org-modern-mode)
+         (org-agenda-finalize . org-modern-agenda))
+  :custom
+  (org-modern-star '("◉" "○" "◈" "◇" "nt" "xt" "x" "x")) ; Custom bullets
+  (org-modern-hide-stars nil) ; Let org-modern handle stars
+  (org-modern-list '((43 . "➤") (45 . "–") (42 . "•"))))
+
+;; Markdown
+(use-package markdown-mode
+  :commands (gfm-mode gfm-view-mode markdown-mode markdown-view-mode)
+  :mode (("\\.markdown\\'" . markdown-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("README\\.md\\'" . gfm-mode))
+  :init
+  (my-leader-def
+    :keymaps 'markdown-mode-map
+    "m"  '(:ignore t :which-key "markdown")
+    "me" '(markdown-do :which-key "Do/Export")
+    "mp" '(markdown-preview :which-key "Preview")
+    "ml" '(markdown-live-preview-mode :which-key "Live Preview")))
+
 (provide 'core)
 ;;; core.el ends here

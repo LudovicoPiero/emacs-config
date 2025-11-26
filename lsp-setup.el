@@ -73,5 +73,38 @@
                              "check" "--fix" "--stdin-filename" (buffer-file-name) "-"))
       (message "Ruff fix applied."))))
 
+;; Tree-sitter
+(use-package treesit-auto
+  :ensure t
+  :config
+  (setq treesit-font-lock-level 4)
+  (global-treesit-auto-mode))
+
+;; Flymake (Syntax Checking)
+(use-package flymake
+  :ensure t
+  :hook (prog-mode . flymake-mode)
+  :custom
+  (flymake-fringe-indicator-position 'right-fringe)
+  (flymake-error-bitmap '(flymake-double-exclamation-mark compilation-error))
+  (flymake-warning-bitmap '(exclamation-mark compilation-warning))
+  (flymake-note-bitmap '(exclamation-mark compilation-info))
+  (flymake-suppress-zero-counters t)
+  (flymake-start-on-flymake-mode t)
+  (flymake-no-changes-timeout 0.5)
+  (flymake-start-on-save-buffer t)
+  (flymake-proc-compilation-regexp
+   '("^\\([^ :]+\):\\([0-9]+\):\\([0-9]+\): \\(?:.*\\)$"
+     1 2 3))
+
+  :init
+  ;; Evil bindings for navigation using General
+  ;; We use :keymaps 'flymake-mode-map so these only exist when flymake is active
+  (general-def
+    :states 'normal
+    :keymaps 'flymake-mode-map
+    "]e" 'flymake-goto-next-error
+    "[e" 'flymake-goto-prev-error))
+
 (provide 'lsp-setup)
 ;;; lsp-setup.el ends here

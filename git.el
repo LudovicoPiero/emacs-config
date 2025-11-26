@@ -9,6 +9,7 @@
   :commands (magit-status magit-get-current-branch)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  (magit-openpgp-default-signing-key '3911DD276CFE779C)
 
   :init
   ;; We define keys in :init so they are available BEFORE Magit loads.

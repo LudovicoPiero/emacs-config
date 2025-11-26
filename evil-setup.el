@@ -35,9 +35,9 @@
   (setq evil-want-keybinding nil)
   :custom
   (evil-default-cursor       'box)  ; Fallback
-  (evil-normal-state-cursor '(box "purple"))
-  (evil-insert-state-cursor '(box "orange"))
-  (evil-visual-state-cursor '(box "grey"))
+  (evil-normal-state-cursor  'box)  ; Normal mode
+  (evil-insert-state-cursor  'box)  ; Insert mode (usually bar)
+  (evil-visual-state-cursor  'box)  ; Visual mode
   (evil-motion-state-cursor  'box)  ; Motion mode
   (evil-replace-state-cursor 'box)  ; Replace mode (usually underscore)
   (evil-operator-state-cursor 'box) ; Operator pending

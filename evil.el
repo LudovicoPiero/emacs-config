@@ -132,11 +132,42 @@
 
     ;; Windows
     "w"  '(:ignore t :which-key "window")
-    "w/" '(evil-window-vsplit :which-key "Split vertical")
-    "w-" '(evil-window-split :which-key "Split horizontal")
+    "w;" '(evil-window-vsplit :which-key "Split vertical")
+    "wv" '(evil-window-split :which-key "Split horizontal")
     "wl" '(evil-window-right :which-key "Window right")
     "wh" '(evil-window-left :which-key "Window left")
     "wk" '(evil-window-up :which-key "Window up")
     "wj" '(evil-window-down :which-key "Window down")
     "wd" '(delete-window :which-key "Delete window")
     "wo" '(delete-other-windows :which-key "Maximize window")))
+
+(use-package avy
+  :ensure t
+  :custom
+  (avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?q ?w ?e ?r ?t ?y ?u ?i ?o ?p ?z ?x ?c ?v ?b ?n ?m))
+
+  (avy-timeout-seconds 0.3) ;; Delay before jump (fuzzy-ish feel)
+  (avy-style 'pre)          ;; Show label before the target
+  (avy-background t)        ;; Dim the background during jump
+  (avy-all-windows t)       ;; Search across all visible windows (like Flash)
+
+  :init
+  (with-eval-after-load 'general
+    (general-def
+      :states 'normal
+      "s" '(avy-goto-char-timer :which-key "Flash Jump")
+      "S" '(avy-goto-word-1 :which-key "Flash Word"))
+
+    (general-def
+      :states 'operator
+      "r" '(avy-goto-char-timer :which-key "Remote Jump")
+      "R" '(avy-goto-word-1 :which-key "Remote Word"))
+
+    (general-def
+      :states '(normal insert emacs)
+      "C-s" '(avy-isearch :which-key "Flash Search"))
+
+    (my-leader-def
+      "j"  '(:ignore t :which-key "jump")
+      "jj" '(avy-goto-char-timer :which-key "Jump char")
+      "jl" '(avy-goto-line :which-key "Jump line"))))

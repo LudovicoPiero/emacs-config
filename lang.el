@@ -12,6 +12,15 @@
   (org-edit-src-content-indentation 0)
   (org-startup-truncated t))
 
+(use-package org-modern
+  :ensure t
+  :hook ((org-mode . org-modern-mode)
+         (org-agenda-finalize . org-modern-agenda))
+  :custom
+  (org-modern-star '("◉" "○" "◈" "◇" "nt" "xt" "x" "x")) ; Custom bullets
+  (org-modern-hide-stars nil) ; Let org-modern handle stars
+  (org-modern-list '((43 . "➤") (45 . "–") (42 . "•"))))
+
 ;; Markdown
 (use-package markdown-mode
   :commands (gfm-mode gfm-view-mode markdown-mode markdown-view-mode)

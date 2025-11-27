@@ -52,7 +52,7 @@
   (doom-modeline-major-mode-color-icon t)
   (doom-modeline-buffer-state-icon t)
   (doom-modeline-buffer-modification-icon t)
-  (doom-modeline-minor-modes nil) ;; Hide minor modes to keep it clean
+  (doom-modeline-minor-modes t) ;; Show / Hide minor modes
   (doom-modeline-enable-word-count nil)
   (doom-modeline-buffer-file-name-style 'truncate-upto-project) ;; Smart path display
 

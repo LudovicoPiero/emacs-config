@@ -31,17 +31,22 @@
   :commands (evil-mode evil-define-key)
   :hook (elpaca-after-init . evil-mode)
   :init
+  ;; Integration settings
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
+
+  ;; Cursor Configuration
+  ;; Force box cursor in all states
+  (setq evil-default-cursor       'box)
+  (setq evil-normal-state-cursor  'box)
+  (setq evil-insert-state-cursor  'box)
+  (setq evil-visual-state-cursor  'box)
+  (setq evil-motion-state-cursor  'box)
+  (setq evil-replace-state-cursor 'box)
+  (setq evil-operator-state-cursor 'box)
+  (setq evil-emacs-state-cursor   'box)
+
   :custom
-  (evil-default-cursor       'box)  ; Fallback
-  (evil-normal-state-cursor  'box)  ; Normal mode
-  (evil-insert-state-cursor  'box)  ; Insert mode (usually bar)
-  (evil-visual-state-cursor  'box)  ; Visual mode
-  (evil-motion-state-cursor  'box)  ; Motion mode
-  (evil-replace-state-cursor 'box)  ; Replace mode (usually underscore)
-  (evil-operator-state-cursor 'box) ; Operator pending
-  (evil-emacs-state-cursor   'box)  ; Emacs mode
   (evil-ex-visual-char-range t)
   (evil-ex-search-vim-style-regexp t)
   (evil-split-window-below t)

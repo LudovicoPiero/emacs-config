@@ -33,9 +33,6 @@
 ;; Load Git Configuration
 (minimal-emacs-load-user-init "git-setup.el")
 
-;; Load AI configuration
-(minimal-emacs-load-user-init "ai.el")
-
 ;; Load Vterm configuration
 (minimal-emacs-load-user-init "term-setup.el")
 

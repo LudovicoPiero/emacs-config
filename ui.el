@@ -24,19 +24,12 @@
 (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
   (add-hook hook #'display-line-numbers-mode))
 
-;; Doom Themes
-(use-package doom-themes
-  :ensure t
-  :custom
-  (doom-themes-enable-bold t)
-  (doom-themes-enable-italic t)
-  (doom-themes-treemacs-theme "doom-one")
+(use-package catppuccin-theme
+  :ensure (:host github :repo "catppuccin/emacs")
+  :init
+  (setq catppuccin-flavor 'mocha)
   :config
-  (load-theme 'doom-one t)
-  (doom-themes-visual-bell-config)
-  (doom-themes-neotree-config)
-  (doom-themes-treemacs-config)
-  (doom-themes-org-config))
+  (load-theme 'catppuccin :no-confirm))
 
 (use-package nerd-icons
   :ensure t)

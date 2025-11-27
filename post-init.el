@@ -9,6 +9,8 @@
 
 ;;; Code:
 
+(require 'use-package)
+
 ;; Load Core Systems first (compilation, file handling)
 (minimal-emacs-load-user-init "core.el")
 

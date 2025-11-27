@@ -64,12 +64,14 @@
 ;; Vim-like Tab Bar
 (use-package vim-tab-bar
   :ensure t
+  :diminish vim-tab-bar-mode
   :commands vim-tab-bar-mode
   :hook (elpaca-after-init . vim-tab-bar-mode))
 
 ;; Which Key: shows a popup of available keybindings
 (use-package which-key
   :ensure t
+  :diminish which-key-mode
   :hook (elpaca-after-init . which-key-mode)
   :custom
   (which-key-idle-delay 0.5)
@@ -81,6 +83,7 @@
 
 (use-package highlight-indent-guides
   :ensure t
+  :diminish highlight-indent-guides-mode
   :hook (prog-mode . highlight-indent-guides-mode)
   :custom
   (highlight-indent-guides-method 'character) ;; Use a character like |
@@ -90,6 +93,7 @@
 
 (use-package evil-goggles
   :ensure t
+  :diminish evil-goggles-mode
   :after evil
   :config
   (evil-goggles-mode)
@@ -98,6 +102,7 @@
 
 (use-package rainbow-mode
   :ensure t
+  :diminish rainbow-mode
   :hook ((prog-mode . rainbow-mode)
          (conf-mode . rainbow-mode)))
 

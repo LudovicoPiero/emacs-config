@@ -72,6 +72,7 @@
 (use-package evil-collection
   :after evil
   :ensure t
+  :diminish evil-collection-unimpaired-mode
   :init
   (setq evil-collection-setup-minibuffer t)
   :config

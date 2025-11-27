@@ -20,6 +20,7 @@
 (use-package compile-angel
   :demand t
   :ensure t
+  :diminish compile-angel-on-load-mode
   :custom
   (compile-angel-verbose t)
   :config
@@ -30,6 +31,9 @@
   (push "/pre-early-init.el" compile-angel-excluded-files)
   (push "/post-early-init.el" compile-angel-excluded-files)
   (compile-angel-on-load-mode 1))
+
+(use-package diminish
+  :ensure t)
 
 ;; Auto-revert buffers when files change on disk
 (use-package autorevert

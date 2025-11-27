@@ -11,6 +11,7 @@
 ;;; Code:
 
 (use-package stripspace
+  :diminish stripspace-local-mode
   :ensure t
   :commands stripspace-local-mode
   :hook (find-file . stripspace-local-mode)

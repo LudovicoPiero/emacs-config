@@ -148,7 +148,7 @@
   (avy-background t)        ;; Dim the background during jump
   (avy-all-windows t)       ;; Search across all visible windows (like Flash)
 
-  :init
+  :config
   (with-eval-after-load 'general
     (general-def
       :states 'normal

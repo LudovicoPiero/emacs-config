@@ -19,8 +19,7 @@
   (stripspace-only-if-initially-clean nil)
   (stripspace-restore-column t)
 
-  :init
-  ;; WRAPPER: Wait for 'general' to load before defining keys
+  :config
   (with-eval-after-load 'general
     (my-leader-def
       "ts" '(stripspace-local-mode :which-key "Toggle Strip Space"))))
@@ -49,10 +48,10 @@
   (yas-wrap-around-region nil)
   :init
   (setq yas-verbosity 0)
+  :config
   (with-eval-after-load 'general
     (my-leader-def
       "is" '(yas-insert-snippet :which-key "Insert snippet")))
-  :config
   (add-to-list 'yas-snippet-dirs (expand-file-name "snippets" minimal-emacs-user-directory))
   (yas-reload-all))
 

@@ -79,9 +79,22 @@
   (evil-collection-init))
 
 (use-package evil-surround
-  :after evil
   :ensure t
-  :commands global-evil-surround-mode
+  :after evil
+  :demand t
+  :config
+  (global-evil-surround-mode 1)
+  (define-key evil-normal-state-map (kbd "g s") nil)
+  (define-key evil-visual-state-map (kbd "g s") nil)
+  ;; Add Surround (Normal: gsa + motion + char)
+  (evil-define-key 'normal 'global (kbd "gsa") 'evil-surround-region)
+  ;; Add Surround (Visual: select + gsa + char)
+  (evil-define-key 'visual 'global (kbd "gsa") 'evil-surround-region)
+  ;; Delete Surround (gsd + char)
+  (evil-define-key 'normal 'global (kbd "gsd") 'evil-surround-delete)
+  ;; Replace Surround (gsr + old_char + new_char)
+  (evil-define-key 'normal 'global (kbd "gsr") 'evil-surround-change)
+
   :custom
   (evil-surround-pairs-alist
    '((?\( . ("(" . ")"))
@@ -91,8 +104,7 @@
      (?\] . ("[" . "]"))
      (?\} . ("{" . "}"))
      (?< . ("<" . ">"))
-     (?> . ("<" . ">"))))
-  :hook (elpaca-after-init . global-evil-surround-mode))
+     (?> . ("<" . ">")))))
 
 (use-package general
   :ensure t

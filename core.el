@@ -108,6 +108,31 @@
   (org-modern-hide-stars nil) ; Let org-modern handle stars
   (org-modern-list '((43 . "➤") (45 . "–") (42 . "•"))))
 
+(use-package project
+  :ensure t
+  :custom
+  ;; Add markers for non-git projects (e.g., Node, Go, Rust)
+  (project-vc-extra-root-markers '(".project" "go.mod" "Cargo.toml" "flake.nix" "package.json" "compile_commands.json"))
+  :config
+  ;; Save all buffers before compiling without asking
+  (setq compilation-save-buffers-predicate 'ignore)
+
+  ;; Keybindings with General.el
+  (general-def
+    :prefix "SPC"
+    :states '(normal visual motion)
+    :keymaps 'override
+    "p"  '(:ignore t :which-key "Project")
+    "ps" '(project-switch-project :which-key "Switch Project")
+    "pf" '(project-find-file :which-key "Find File")
+    "pb" '(project-switch-to-buffer :which-key "Buffer")
+    "pd" '(project-dired :which-key "Dired Root")
+    "pk" '(project-kill-buffers :which-key "Kill Buffers")
+    "pc" '(project-compile :which-key "Compile")
+    "pr" '(replace-regexp :which-key "Replace Regexp")
+    "pg" '(project-find-regexp :which-key "Grep/Search")
+    "pt" '(project-shell :which-key "Shell")))
+
 ;; Markdown
 (use-package markdown-mode
   :commands (gfm-mode gfm-view-mode markdown-mode markdown-view-mode)

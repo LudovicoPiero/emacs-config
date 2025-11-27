@@ -27,7 +27,8 @@
 (use-package catppuccin-theme
   :ensure (:host github :repo "catppuccin/emacs")
   :init
-  (setq catppuccin-flavor 'mocha)
+  (setq catppuccin-flavor 'mocha
+        catppuccin-dark-line-numbers-background t)
   :config
   (load-theme 'catppuccin :no-confirm))
 
@@ -53,13 +54,6 @@
   (doom-modeline-lsp t)          ;; Show LSP status
   (doom-modeline-github t)       ;; Show GitHub notifications
   (doom-modeline-modal-icon t))  ;; Show Evil state icon
-
-;; Vim-like Tab Bar
-(use-package vim-tab-bar
-  :ensure t
-  :diminish vim-tab-bar-mode
-  :commands vim-tab-bar-mode
-  :hook (elpaca-after-init . vim-tab-bar-mode))
 
 ;; Which Key: shows a popup of available keybindings
 (use-package which-key

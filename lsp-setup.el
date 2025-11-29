@@ -32,8 +32,7 @@
     yaml-ts-mode
     html-mode) . eglot-ensure)
   :config
-  ;; --- Nix ---
-  (add-to-list 'eglot-server-programs '(nix-mode . ("nixd")))
+  (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
 
   ;; --- Python (Basedpyright) ---
   (add-to-list 'eglot-server-programs
@@ -68,13 +67,14 @@
 
   ;; --- Configure Workspace Settings ---
   (setq-default eglot-workspace-configuration
-                '(:basedpyright (:analysis (:autoSearchPaths t
-                                                             :diagnosticMode "workspace"
-                                                             :useLibraryCodeForTypes t
-                                                             :typeCheckingMode "standard"))
-                                :gopls (:usePlaceholders t
-                                                         :gofumpt t)
-                                :lua (:diagnostics (:globals ["vim" "love"]))))
+                '(:nil (:formatting (:command ["nixfmt"]))
+                       :basedpyright (:analysis (:autoSearchPaths t
+                                                                  :diagnosticMode "workspace"
+                                                                  :useLibraryCodeForTypes t
+                                                                  :typeCheckingMode "standard"))
+                       :gopls (:usePlaceholders t
+                                                :gofumpt t)
+                       :lua (:diagnostics (:globals ["vim" "love"]))))
 
   ;; Performance tweaks
   (fset #'jsonrpc--log-event #'ignore)

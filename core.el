@@ -142,7 +142,7 @@
     :states '(normal visual motion)
     :keymaps 'override
     "p"  '(:ignore t :which-key "Project")
-    "ps" '(project-switch-project :which-key "Switch Project")
+    "pp" '(project-switch-project :which-key "Switch Project")
     "pf" '(project-find-file :which-key "Find File")
     "pb" '(project-switch-to-buffer :which-key "Buffer")
     "pd" '(project-dired :which-key "Dired Root")

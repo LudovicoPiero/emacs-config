@@ -35,6 +35,13 @@
 
 (add-hook 'prog-mode-hook #'highlight-codetags-local-mode)
 
+;; Exclude the recentf, and savehist files
+(with-eval-after-load "savehist"
+  (push (concat "/" (file-name-nondirectory savehist-file))
+        compile-angel-excluded-files))
+(with-eval-after-load "recentf"
+  (push (concat "/" (file-name-nondirectory recentf-save-file))
+        compile-angel-excluded-files))
 ;; Native compilation (compile-angel)
 (use-package compile-angel
   :demand t

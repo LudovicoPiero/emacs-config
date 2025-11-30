@@ -4,7 +4,7 @@
 (require 'use-package)
 
 ;; -- Load Path Setup --
-(defconst my-lisp-dir (expand-file-name "lisp" user-emacs-directory))
+(defconst my-lisp-dir (expand-file-name "lisp" minimal-emacs-user-directory))
 
 ;; Sanity Check: Ensure the directory actually exists
 (unless (file-directory-p my-lisp-dir)
@@ -20,6 +20,7 @@
       (require 'init-core)  ; Better defaults
       (require 'init-ui)    ; Theme & Fonts
       (require 'init-nav)   ; Navigation
-      (require 'init-dev))  ; Coding tools
+      (require 'init-dev)   ; Coding tools
+      (require 'init-keys)) ; Keybinds
   (error
    (message "Failed to load config module: %s" err)))

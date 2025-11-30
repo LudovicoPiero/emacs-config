@@ -15,7 +15,7 @@ A minimalist, high-performance Emacs configuration built with `straight.el` and 
 
 1.  **Clone the repository**:
     ```bash
-    git clone git@github.com:LudovicoPiero/emacs-config-private.git ~/.emacs.d
+    git clone git@github.com:LudovicoPiero/emacs-config.git ~/.emacs.d
     ```
 
 2.  **Ensure Nix Dependencies**:

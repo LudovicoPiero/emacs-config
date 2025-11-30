@@ -1,0 +1,48 @@
+name: Sync Specific Emacs Files
+
+on:
+  schedule:
+    # Runs at 00:00 UTC every day
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  sync-files:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout your repository
+        uses: actions/checkout@v4
+
+      - name: Fetch upstream files
+        run: |
+          # Add the upstream remote
+          git remote add upstream https://github.com/jamescherti/minimal-emacs.d.git
+
+          # Fetch the main branch from upstream
+          git fetch upstream main
+
+          # Overwrite local files using git show
+          git show upstream/main:init.el > init.el
+          git show upstream/main:early-init.el > early-init.el
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.PAT }}
+          commit-message: "chore: sync init.el and early-init.el from upstream"
+          title: "chore: Sync configuration from upstream"
+          body: |
+            This PR updates `init.el` and `early-init.el` to match the latest version from [jamescherti/minimal-emacs.d](https://github.com/jamescherti/minimal-emacs.d).
+
+            This allows you to review the changes before merging them into your config.
+          branch: chore/sync-upstream
+          delete-branch: true
+          base: main
+          labels: |
+            report
+            automated pr
+            dispatch

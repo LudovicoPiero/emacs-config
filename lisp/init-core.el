@@ -51,6 +51,17 @@
 (setq dired-kill-when-opening-new-dired-buffer t)
 (setq dired-dwim-target t)
 
+;; -- EXPAND REGION (Semantic Selection) --
+(use-package expand-region
+  :bind ("C-=" . er/expand-region))
+
+;; -- DRAG STUFF (Move lines up/down) --
+(use-package drag-stuff
+  :init (drag-stuff-global-mode 1)
+  :bind
+  ("M-<up>" . drag-stuff-up)
+  ("M-<down>" . drag-stuff-down))
+
 ;; -- STRIPSPACE --
 (use-package stripspace
   :hook (after-init . global-stripspace-mode)
@@ -59,7 +70,6 @@
   (setq stripspace-skip-modes '(markdown-mode org-mode conf-mode)))
 
 ;; -- VUNDO (Visual Undo) --
-;; Replaces the confusing "undo-redo" loop with a tree visualizer
 (use-package vundo
   :bind ("C-x u" . vundo)
   :config

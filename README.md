@@ -31,14 +31,15 @@ A minimalist, high-performance Emacs configuration built with `straight.el` and 
 
 ```text
 ~/.emacs.d/
-├── early-init.el       # GUI suppression & GC tuning
-├── init.el             # Module loader & path setup
+├── early-init.el         # GUI suppression & GC tuning
+├── init.el               # Module loader & path setup
 └── lisp/
-    ├── init-pkg.el     # Straight.el bootstrap
-    ├── init-core.el    # Defaults, file hygiene, Crux, Vundo, Multi-cursors
-    ├── init-ui.el      # Doom Theme/Modeline, Fonts
-    ├── init-nav.el     # Vertico, Consult, Embark, Avy
-    └── init-dev.el     # Eglot, Treesitter, Magit, Apheleia
+    ├── init-pkg.el       # Straight.el bootstrap
+    ├── init-core.el      # Defaults, file hygiene, Crux, Vundo, Multi-cursors
+    ├── init-ui.el        # Doom Theme/Modeline, Fonts
+    ├── init-nav.el       # Vertico, Consult, Embark, Avy
+    └── init-dev.el       # Eglot, Treesitter, Magit, Apheleia
+    └── init-keys.el      # Keybinds
 ````
 
 ## ⌨️ Keybind Cheatsheet

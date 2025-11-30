@@ -1,5 +1,8 @@
 ;;; post-init.el --- Entry Point -*- lexical-binding: t; -*-
 
+;; Ensure all necessary use-package variables and functions are loaded
+(require 'use-package)
+
 ;; -- Load Path Setup --
 (defconst my-lisp-dir (expand-file-name "lisp" user-emacs-directory))
 
@@ -20,5 +23,3 @@
       (require 'init-dev))  ; Coding tools
   (error
    (message "Failed to load config module: %s" err)))
-
-(message "System Online.")

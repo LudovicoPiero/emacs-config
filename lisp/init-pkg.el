@@ -16,4 +16,20 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
+;; -- GENERAL (Keybind Utility) --
+;; Loaded early so :general keyword works in all other modules
+(use-package general
+  :config
+  ;; Define the "SPC" leader key
+  (general-create-definer my-leader-def
+    :prefix "SPC"
+    :states '(normal visual motion)
+    :keymaps 'override)
+
+  ;; Define "SPC m" for local leader (major mode specific)
+  (general-create-definer my-local-leader-def
+    :prefix "SPC m"
+    :states '(normal visual motion)
+    :keymaps 'override))
+
 (provide 'init-pkg)

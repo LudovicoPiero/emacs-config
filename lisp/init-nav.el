@@ -1,80 +1,77 @@
-;;; init-nav.el --- Vertico, Consult, Avy & Orderless -*- lexical-binding: t; -*-
+;;; init-nav.el --- Vertico, Consult, Avy -*- lexical-binding: t; -*-
 
-;; -- AVY (Jump Navigation) --
 (use-package avy
-  :bind
-  ("C-:" . avy-goto-char)       ; Jump to char
-  ("C-'" . avy-goto-char-2)     ; Jump to two chars
-  ("M-g w" . avy-goto-word-1))  ; Jump to word
+  :commands (avy-goto-char avy-goto-char-2 avy-goto-word-1)
+  :general
+  (general-def
+    "C-:"   #'avy-goto-char
+    "C-'"   #'avy-goto-char-2
+    "M-g w" #'avy-goto-word-1))
 
-;; -- VERTICO (The UI) --
 (use-package vertico
-  :init
-  (vertico-mode)
-  :config
-  (setq vertico-cycle t))
+  :init (vertico-mode)
+  :config (setq vertico-cycle t))
 
-;; -- ORDERLESS (Matching) --
 (use-package orderless
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
-;; -- MARGINALIA (Annotations) --
 (use-package marginalia
   :after vertico
-  :init
-  (marginalia-mode))
+  :init (marginalia-mode))
 
-;; -- CONSULT (Commands) --
 (use-package consult
   :hook (completion-list-mode . consult-preview-at-point-mode)
-  :bind (("C-c h" . consult-history)
-         ("C-c m" . consult-man)
-         ("C-c i" . consult-info)
-         ("C-x b" . consult-buffer)
-         ("C-x 4 b" . consult-buffer-other-window)
-         ("C-x 5 b" . consult-buffer-other-frame)
-         ("C-x r b" . consult-bookmark)
-         ("C-x p b" . consult-project-buffer)
-         ("M-g e" . consult-compile-error)
-         ("M-g g" . consult-goto-line)
-         ("M-g o" . consult-outline)
-         ("M-g m" . consult-mark)
-         ("M-g k" . consult-global-mark)
-         ("M-g i" . consult-imenu)
-         ("M-g I" . consult-imenu-multi)
-         ("M-s d" . consult-find)
-         ("M-s r" . consult-ripgrep)
-         ("M-s l" . consult-line)
-         ("M-s L" . consult-line-multi)
-         ("M-s k" . consult-keep-lines)
-         ("M-s u" . consult-focus-lines)
-         :map isearch-mode-map
-         ("M-e" . consult-isearch-history)
-         ("M-s e" . consult-isearch-history)
-         ("M-s l" . consult-line)
-         ("M-s L" . consult-line-multi))
+  :commands (consult-buffer consult-ripgrep consult-line consult-find consult-imenu consult-recent-file consult-history consult-yank-pop consult-project-buffer)
   :init
   (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref))
+        xref-show-definitions-function #'consult-xref)
+  :general
+  ;; Global M-bindings
+  (general-def
+    "C-x b" #'consult-buffer
+    "M-s r" #'consult-ripgrep)
 
-;; -- EMBARK (Context Actions) --
+  ;; Leader bindings
+  (my-leader-def
+    "bb"  #'consult-buffer
+    "fr"  #'consult-recent-file
+
+    ;; --- s: SEARCH ---
+    "s"   '(:ignore t :which-key "search")
+    "ss"  #'consult-line
+    "sp"  #'consult-ripgrep
+    "sf"  #'consult-find
+    "si"  #'consult-imenu
+    "sh"  #'consult-history     ; Search command history
+    "sk"  #'consult-yank-pop))  ; Search kill-ring (yank history)
+
 (use-package embark
-  :bind
-  (("C-." . embark-act)
-   ("C-;" . embark-dwim)
-   ("C-h B" . embark-bindings))
-  :init
-  (setq prefix-help-command #'embark-prefix-help-command)
+  :commands (embark-act embark-dwim embark-bindings)
+  :init (setq prefix-help-command #'embark-prefix-help-command)
   :config
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
-                 (window-parameters (mode-line-format . none)))))
+                 (window-parameters (mode-line-format . none))))
+  :general
+  (general-def
+    "C-."   #'embark-act
+    "C-;"   #'embark-dwim
+    "C-h B" #'embark-bindings))
 
 (use-package embark-consult
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
+
+;; --- NEW: Project Bindings (Doom Style) ---
+;; Built-in project management (lightweight alternative to Projectile)
+(my-leader-def
+  "p"   '(:ignore t :which-key "project")
+  "pf"  #'project-find-file                ; Find file in project
+  "pp"  #'project-switch-project           ; Switch to another project
+  "pb"  #'consult-project-buffer           ; Switch to buffer in current project
+  "pk"  #'project-kill-buffers             ; Kill all project buffers
+  "pr"  #'project-remember-projects-under) ; Discover projects
 
 (provide 'init-nav)

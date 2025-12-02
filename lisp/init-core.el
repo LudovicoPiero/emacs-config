@@ -1,53 +1,70 @@
 ;;; init-core.el --- Sane Defaults & Helpers -*- lexical-binding: t; -*-
 
-;; -- EXPAND REGION (Semantic Selection) --
 (use-package expand-region
-  :bind ("C-=" . er/expand-region))
+  :commands (er/expand-region)
+  :general
+  (general-def
+    "C-=" #'er/expand-region))
 
-;; -- DRAG STUFF (Move lines up/down) --
 (use-package drag-stuff
   :init (drag-stuff-global-mode 1)
-  :bind
-  ("M-<up>" . drag-stuff-up)
-  ("M-<down>" . drag-stuff-down))
+  :general
+  (general-def
+    "M-<up>"   #'drag-stuff-up
+    "M-<down>" #'drag-stuff-down))
 
-;; -- STRIPSPACE --
 (use-package stripspace
-  :hook (after-init . global-stripspace-mode)
-  :bind ("C-c s" . stripspace-strip-buffer)
-  :config
-  (setq stripspace-skip-modes '(markdown-mode org-mode conf-mode)))
+  :hook (after-init . stripspace-global-mode)
+  :config (setq stripspace-skip-modes '(markdown-mode org-mode conf-mode))
+  :general
+  (general-def
+    "C-c s" #'stripspace-cleanup))
 
-;; -- VUNDO (Visual Undo) --
 (use-package vundo
-  :bind ("C-x u" . vundo)
-  :config
-  (setq vundo-glyph-alist vundo-unicode-symbols))
+  :commands (vundo)
+  :config (setq vundo-glyph-alist vundo-unicode-symbols)
+  :general
+  (general-def
+    "C-x u" #'vundo)
+  (my-leader-def
+    "u" #'vundo))
 
-;; -- MULTIPLE CURSORS --
 (use-package multiple-cursors
-  :bind
-  ("C->" . mc/mark-next-like-this)       ; Add cursor to next match
-  ("C-<" . mc/mark-previous-like-this)   ; Add cursor to previous match
-  ("C-c C-<" . mc/mark-all-like-this)    ; Add cursor to ALL matches
-  ("C-c m" . mc/edit-lines)              ; Add cursor to every line in selection
-  :config
-  (setq mc/list-file (expand-file-name "mc-lists.el" user-emacs-var-directory)))
+  :commands (mc/mark-next-like-this mc/mark-previous-like-this mc/mark-all-like-this mc/edit-lines)
+  :config (setq mc/list-file (expand-file-name "mc-lists.el" user-emacs-var-directory))
+  :general
+  (general-def
+    "C->"     #'mc/mark-next-like-this
+    "C-<"     #'mc/mark-previous-like-this
+    "C-c C-<" #'mc/mark-all-like-this
+    "C-c m"   #'mc/edit-lines))
 
-;; -- CRUX (Useful Extensions) --
 (use-package crux
-  :bind
-  ("C-a" . crux-move-beginning-of-line)       ; Toggle between first-char and line-start
-  ("C-k" . crux-smart-kill-line)              ; Kill line, or join with next if at end
-  ("S-<return>" . crux-smart-open-line)       ; Open line below (smart)
-  ("C-S-<return>" . crux-smart-open-line-above) ; Open line above (smart)
-  ("C-c D" . crux-delete-file-and-buffer)     ; Delete current file
-  ("C-c r" . crux-rename-file-and-buffer))    ; Rename current file
+  :commands (crux-move-beginning-of-line crux-smart-kill-line crux-smart-open-line crux-smart-open-line-above crux-delete-file-and-buffer crux-rename-file-and-buffer)
+  :general
+  (general-def
+    "C-a"            #'crux-move-beginning-of-line
+    "C-k"            #'crux-smart-kill-line
+    "S-<return>"     #'crux-smart-open-line
+    "C-S-<return>"   #'crux-smart-open-line-above)
 
-;; -- WHICH-KEY --
+  (my-leader-def
+    "fD" #'crux-delete-file-and-buffer
+    "fR" #'crux-rename-file-and-buffer))
+
 (use-package which-key
   :init (which-key-mode)
-  :config
-  (setq which-key-idle-delay 0.3))
+  :config (setq which-key-idle-delay 0.3))
+
+;; --- Help Mappings (Doom Style) ---
+(my-leader-def
+  "h"   '(:ignore t :which-key "help")
+  "hf"  #'describe-function
+  "hv"  #'describe-variable
+  "hk"  #'describe-key
+  "hm"  #'describe-mode
+  "hb"  #'describe-bindings
+  "hi"  #'info
+  "hI"  #'info-display-manual)
 
 (provide 'init-core)

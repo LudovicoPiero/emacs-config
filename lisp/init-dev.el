@@ -1,7 +1,13 @@
 ;;; init-dev.el --- Coding & LSP -*- lexical-binding: t; -*-
 
+;; -- LANGUAGES & MODES --
+
 (use-package nix-mode
-  :mode "\\.nix\\'")
+  :mode "\\.nix\\'"
+  :general
+  (my-local-leader-def
+    :keymaps 'nix-mode-map
+    "b" #'nix-build-buffer))
 
 (use-package lua-mode
   :mode "\\.lua\\'")
@@ -10,14 +16,31 @@
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
 
-;; -- GIT (Magit) --
+(use-package go-ts-mode
+  :ensure nil
+  :straight nil
+  :general
+  (my-local-leader-def
+    :keymaps 'go-ts-mode-map
+    "t" #'go-test-current-test
+    "r" #'go-run))
+
+(use-package c++-ts-mode
+  :ensure nil
+  :straight nil
+  :general
+  (my-local-leader-def
+    :keymaps '(c-mode-map c++-mode-map c++-ts-mode-map)
+    "c" #'compile
+    "d" #'gdb))
+
+;; -- TOOLS --
+
 (use-package magit
-  :bind ("C-x g" . magit-status)
   :commands (magit-status magit-get-current-branch)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
-;; -- COMPLETION (Corfu) --
 (use-package corfu
   :init
   (global-corfu-mode)
@@ -25,83 +48,83 @@
   (corfu-auto t)
   (corfu-cycle t)
   (corfu-quit-no-match nil)
-  :bind
-  (:map corfu-map
-        ("TAB" . corfu-next)
-        ([tab] . corfu-next)
-        ("S-TAB" . corfu-previous)
-        ([backtab] . corfu-previous)))
+  :general
+  (general-def
+    :keymaps 'corfu-map
+    "TAB" #'corfu-next
+    [tab] #'corfu-next
+    "S-TAB" #'corfu-previous
+    [backtab] #'corfu-previous))
 
-;; -- TREESITTER --
 (use-package treesit-auto
   :custom
   (treesit-auto-install 'prompt)
   :config
-  ;; This automatically switches you to _ts-mode (e.g., python-ts-mode)
-  ;; if the grammar is found in your Nix store.
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
-;; -- LSP (Eglot) --
 (use-package eglot
+  ;; Ensure Eglot is triggered for these modes
   :hook
-  ;; trigger Eglot on all these modes
-  ((nix-mode
-    python-ts-mode
-    go-ts-mode
-    rust-ts-mode
-    c++-ts-mode
-    lua-mode
-    js-ts-mode) . eglot-ensure)
-
+  ((nix-mode python-ts-mode go-ts-mode rust-ts-mode c++-ts-mode lua-mode js-ts-mode) . eglot-ensure)
+  :commands (eglot-rename eglot-code-actions eglot-format)
   :config
-  ;; Python -> basedpyright
-  (add-to-list 'eglot-server-programs
-               '((python-mode python-ts-mode) . ("basedpyright-langserver" "--stdio")))
+  ;; -- Server Configuration --
+  (add-to-list 'eglot-server-programs '((python-mode python-ts-mode) . ("basedpyright-langserver" "--stdio")))
+  (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
+  (add-to-list 'eglot-server-programs '(lua-mode . ("emmylua-ls")))
+  (add-to-list 'eglot-server-programs '((go-mode go-ts-mode) . ("gopls")))
+  (add-to-list 'eglot-server-programs '((rust-mode rust-ts-mode) . ("rust-analyzer")))
+  (add-to-list 'eglot-server-programs '((c++-mode c++-ts-mode) . ("clangd")))
 
-  ;; Nix -> nil
-  (add-to-list 'eglot-server-programs
-               '(nix-mode . ("nil")))
-
-  ;; Lua -> emmylua-ls
-  (add-to-list 'eglot-server-programs
-               '(lua-mode . ("emmylua-ls")))
-
-  ;; Go -> gopls (Standard, but explicit is safer)
-  (add-to-list 'eglot-server-programs
-               '((go-mode go-ts-mode) . ("gopls")))
-
-  ;; Rust -> rust-analyzer (Standard)
-  (add-to-list 'eglot-server-programs
-               '((rust-mode rust-ts-mode) . ("rust-analyzer")))
-
-  ;; C++ -> clangd (Standard)
-  (add-to-list 'eglot-server-programs
-               '((c++-mode c++-ts-mode) . ("clangd")))
-
-  ;; Optimization
   (setq eglot-events-buffer-size 0)
 
-  :bind
-  (:map eglot-mode-map
-        ("C-c l r" . eglot-rename)
-        ("C-c l a" . eglot-code-actions)
-        ("C-c l d" . eldoc)
-        ("C-c l f" . eglot-format)))
+  :general
+  ;; Buffer-local keys (only active when in eglot mode)
+  (general-def
+    :keymaps 'eglot-mode-map
+    "C-c l r" #'eglot-rename
+    "C-c l a" #'eglot-code-actions
+    "C-c l d" #'eldoc
+    "C-c l f" #'eglot-format))
 
-;; -- FORMATTER (Apheleia) --
 (use-package apheleia
+  :commands (apheleia-format-buffer)
   :config
   (apheleia-global-mode +1)
-  (setq apheleia-on-save nil) ;; Manual trigger only
+  (setq apheleia-on-save nil)
+  :general
+  (general-def
+    "C-c f" #'apheleia-format-buffer))
 
-  :bind
-  ("C-c f" . apheleia-format-buffer))
-
-;; -- SYNTAX CHECKING --
 (use-package flymake
-  :bind
-  ("M-n" . flymake-goto-next-error)
-  ("M-p" . flymake-goto-prev-error))
+  :commands (flymake-goto-next-error flymake-goto-prev-error flymake-show-buffer-diagnostics)
+  :general
+  (general-def
+    "M-n" #'flymake-goto-next-error
+    "M-p" #'flymake-goto-prev-error))
+
+;; -- GLOBAL DEVELOPMENT KEYBINDINGS --
+(my-leader-def
+  ;; Git
+  "g"   '(:ignore t :which-key "git")
+  "gg"  #'magit-status
+  "gf"  #'magit-file-dispatch
+  "gb"  #'magit-blame
+
+  ;; Code / LSP
+  "c"   '(:ignore t :which-key "code")
+  "ca"  #'eglot-code-actions
+  "cr"  #'eglot-rename
+  "cd"  #'eldoc
+  "cf"  #'apheleia-format-buffer
+
+  ;; Diagnostics
+  "x"   '(:ignore t :which-key "diagnostics")
+  "xx"  #'consult-flymake
+  "xn"  #'flymake-goto-next-error
+  "xp"  #'flymake-goto-prev-error
+  "xb"  #'flymake-show-buffer-diagnostics
+  "ce"  #'consult-flymake)
 
 (provide 'init-dev)

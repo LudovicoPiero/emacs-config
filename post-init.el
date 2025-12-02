@@ -16,11 +16,11 @@
 ;; Use a simple catch to print better errors if a specific module fails
 (condition-case err
     (progn
-      (require 'init-pkg)   ; Bootstrap Straight & Use-package
+      (require 'init-pkg)   ; Bootstrap Straight & Use-package & General
+      (require 'init-keys)  ; Evil Mode 
       (require 'init-core)  ; Better defaults
       (require 'init-ui)    ; Theme & Fonts
       (require 'init-nav)   ; Navigation
-      (require 'init-dev)   ; Coding tools
-      (require 'init-keys)) ; Keybinds
+      (require 'init-dev))  ; Coding tools
   (error
    (message "Failed to load config module: %s" err)))

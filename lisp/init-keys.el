@@ -1,11 +1,11 @@
-;;; init-keys.el --- Evil & General Keybinds -*- lexical-binding: t; -*-
+;;; init-keys.el --- Evil & Orphans -*- lexical-binding: t; -*-
 
-;; -- EVIL MODE (Vim Bindings) --
+;; -- EVIL MODE --
 (use-package evil
   :init
   (setq evil-want-integration t)
-  (setq evil-want-keybinding nil) ;; Required for evil-collection
-  (setq evil-want-C-u-scroll t)   ;; Nice to have
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
   (setq evil-undo-system 'undo-redo)
   :config
   (evil-mode 1))
@@ -15,91 +15,54 @@
   :config
   (evil-collection-init))
 
-;; -- GENERAL (Key Definitions) --
-(use-package general
+;; -- EVIL COMMENTARY --
+(use-package evil-commentary
   :after evil
   :config
-  ;; Define the "SPC" leader key
-  (general-create-definer my-leader-def
-    :prefix "SPC"
-    :states '(normal visual motion)
-    :keymaps 'override)
-
-  ;; Define "SPC m" for local leader (major mode specific)
-  (general-create-definer my-local-leader-def
-    :prefix "SPC m"
-    :states '(normal visual motion)
-    :keymaps 'override)
-
+  (evil-commentary-mode)
+  :general
   (my-leader-def
-    ""     nil
-    "SPC" '(execute-extended-command :which-key "M-x")
-    "u"   '(vundo :which-key "undo tree")
-    "g"   '(magit-status :which-key "git status")
+    "/" #'evil-commentary-line))
 
-    ;; --- s: SEARCH ---
-    "s"   '(:ignore t :which-key "search")
-    "ss"  '(consult-line :which-key "buffer text")
-    "sp"  '(consult-ripgrep :which-key "project text")
-    "sf"  '(consult-find :which-key "find file in project")
-    "si"  '(consult-imenu :which-key "jump to symbol")
+;; -- EVIL SURROUND --
+(use-package evil-surround
+  :after evil
+  :config
+  (global-evil-surround-mode 1)
+  :general
+  (general-def
+    :states '(normal visual)
+    "gsa" #'evil-surround-region
+    "gsd" #'evil-surround-delete
+    "gsr" #'evil-surround-change))
 
-    ;; --- c: CODE (LSP) ---
-    "c"   '(:ignore t :which-key "code")
-    "ca"  '(eglot-code-actions :which-key "action")
-    "cr"  '(eglot-rename :which-key "rename")
-    "cf"  '(apheleia-format-buffer :which-key "format")
-    "cd"  '(eldoc :which-key "doc")
-    "ce"  '(consult-flymake :which-key "list errors")
+;; -- ORPHAN GLOBAL KEYS --
+;; Generic functionality that doesn't fit into specific modules
+(my-leader-def
+  "SPC" #'execute-extended-command
+  "TAB" #'mode-line-other-buffer   ; Fast switch to previous buffer (Like Doom 'SPC TAB')
+  "."   #'find-file                ; Fast file find (Like Doom 'SPC .')
 
-    ;; --- t: TOGGLE ---
-    "t"   '(:ignore t :which-key "toggle")
-    "tt"  '(consult-theme :which-key "theme")
-    "tl"  '(display-line-numbers-mode :which-key "line numbers")
-    "tw"  '(toggle-word-wrap :which-key "word wrap")
+  ;; --- q: QUIT / SESSION ---
+  "q"   '(:ignore t :which-key "quit/session")
+  "qq"  #'save-buffers-kill-terminal
+  "qR"  #'restart-emacs
 
-    ;; --- b: BUFFERS ---
-    "b"   '(:ignore t :which-key "buffer")
-    "bb"  '(consult-buffer :which-key "switch")
-    "bk"  '(kill-current-buffer :which-key "kill")
-    "br"  '(revert-buffer :which-key "revert")
-    "bn"  '(next-buffer :which-key "next")
-    "bp"  '(previous-buffer :which-key "prev")
+  ;; --- f: FILES (Generic) ---
+  "f"   '(:ignore t :which-key "file")
+  "ff"  #'find-file
+  "fs"  #'save-buffer
+  "fc"  '((lambda () (interactive) (find-file (expand-file-name "init-keys.el" (concat user-emacs-directory "lisp/")))) :which-key "edit keys")
+  "fy"  #'(lambda () (interactive) (kill-new (buffer-file-name))) ; Yank file path
 
-    ;; --- x: DIAGNOSTICS ---
-    "x"   '(:ignore t :which-key "diagnostics")
-    "xx"  '(consult-flymake :which-key "list errors")
-    "xn"  '(flymake-goto-next-error :which-key "next error")
-    "xp"  '(flymake-goto-prev-error :which-key "prev error")
-    "xb"  '(flymake-show-buffer-diagnostics :which-key "buffer diag")
-
-    ;; --- f: FILES ---
-    "f"   '(:ignore t :which-key "file")
-    "ff"  '(find-file :which-key "find")
-    "fr"  '(consult-recent-file :which-key "recent")
-    "fs"  '(save-buffer :which-key "save")
-    "fD"  '(crux-delete-file-and-buffer :which-key "delete")
-    "fR"  '(crux-rename-file-and-buffer :which-key "rename")
-    "fc"  '((lambda () (interactive) (find-file (expand-file-name "init-keys.el" (concat user-emacs-directory "lisp/")))) :which-key "edit keys")
-  )
-
-  ;; --- Local Leader (Major Mode Specific) ---
-  ;; Go
-  (my-local-leader-def
-    :keymaps 'go-ts-mode-map
-    "t" '(go-test-current-test :which-key "test func")
-    "r" '(go-run :which-key "run"))
-
-  ;; C/C++
-  (my-local-leader-def
-    :keymaps '(c-mode-map c++-mode-map c++-ts-mode-map)
-    "c" '(compile :which-key "compile")
-    "d" '(gdb :which-key "debug"))
-
-  ;; Nix
-  (my-local-leader-def
-    :keymaps 'nix-mode-map
-    "b" '(nix-build-buffer :which-key "build"))
-)
+  ;; --- b: BUFFERS (Generic) ---
+  "b"   '(:ignore t :which-key "buffer")
+  "bk"  #'kill-current-buffer
+  "br"  #'revert-buffer
+  "bn"  #'next-buffer
+  "bp"  #'previous-buffer
+  "bY"  #'(lambda () (interactive) (kill-new (buffer-name)))       ; Yank buffer name
+  "bB"  #'switch-to-buffer                                         ; Fallback switch
+  "bN"  #'make-empty-file-with-process-buffer)                     ; New empty buffer
 
 (provide 'init-keys)

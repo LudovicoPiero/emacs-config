@@ -5,11 +5,13 @@ A minimalist, high-performance Emacs configuration built with `straight.el` and 
 ## 🚀 Features
 
 - **Fast Startup**: Tuned garbage collection and `early-init.el` optimizations.
-- **Clean Filesystem**: All backups, save-history, and auto-saves are forced into `~/.emacs.d/var/`. No `~` files cluttering your projects.
+- **The "Jail" Architecture**: All plugins, backups, and save files are strictly isolated in `~/.emacs.d/var/`. The root directory stays clean.
 - **Modern Navigation**: The "Vertico Stack" (Vertico, Consult, Orderless, Marginalia, Embark).
 - **LSP & Treesitter**: Eglot and Treesit-auto configured to use binaries provided by Nix.
-- **Git Integration**: Magit, the best Git client in existence.
+- **Project Workflow**: Built-in `project.el` enhanced with bulk search/replace and compilation tools.
+- **Git Integration**: Magit with Git Gutter (diff-hl) in the sidebar.
 - **Vim Bindings**: Evil Mode + Evil Collection + General.el for a complete modal editing experience.
+- **Visuals**: Catppuccin theme, Doom Modeline, Dashboard start screen, and Nerd Fonts.
 
 ## 🛠️ Installation
 
@@ -23,7 +25,7 @@ A minimalist, high-performance Emacs configuration built with `straight.el` and 
     This config relies on external binaries for LSP and formatting. Ensure your Nix shell/wrapper provides:
     - **LSP**: `basedpyright`, `nil` (Nix), `gopls`, `rust-analyzer`, `clangd`, `emmylua-ls`.
     - **Formatters**: `ruff`, `black`, `nixfmt`, `gofumpt`, `stylua`.
-    - **Tools**: `ripgrep`, `fd`, `git`.
+    - **Tools**: `ripgrep`, `fd`, `git`, `cmake`, `libtool` (for Vterm).
 
 3.  **Launch Emacs**:
     On first run, `straight.el` will bootstrap itself and compile all packages. This might take a few minutes.
@@ -33,15 +35,21 @@ A minimalist, high-performance Emacs configuration built with `straight.el` and 
 ```text
 ~/.emacs.d/
 ├── early-init.el         # GUI suppression & GC tuning
-├── init.el               # Module loader & path setup
-└── lisp/
-    ├── init-pkg.el       # Straight.el & General.el (Leader setup)
-    ├── init-core.el      # Defaults, Crux, Vundo, Multi-cursors
-    ├── init-ui.el        # Theme, Modeline, Fonts, Window keys
-    ├── init-nav.el       # Vertico, Consult, Embark, Project keys
-    ├── init-dev.el       # Eglot, Treesitter, Magit, Apheleia
-    └── init-keys.el      # Evil setup & Global/Orphan keys
-```
+├── init.el               # Module loader
+├── pre-early-init.el     # The "Jail" setup (Redirects vars to var/)
+├── lisp/
+│   ├── init-pkg.el       # Straight.el & General.el (Leader setup)
+│   ├── init-core.el      # Defaults, Crux, Vundo, Multi-cursors
+│   ├── init-ui.el        # Theme, Modeline, Dashboard, Visuals
+│   ├── init-nav.el       # Vertico, Consult, Embark
+│   ├── init-dev.el       # Projects, Eglot, Treesitter, Magit, Terminal
+│   └── init-keys.el      # Evil setup & Global/Orphan keys
+└── var/                  # AUTOMATICALLY CREATED (The Jail)
+    ├── elpa/             # Packages
+    ├── straight/         # Packages
+    ├── undo/             # Undo history
+    └── auto-save/        # Auto saves
+````
 
 ## ⌨️ Keybind Cheatsheet
 
@@ -66,10 +74,10 @@ A minimalist, high-performance Emacs configuration built with `straight.el` and 
 | `SPC f f` | `find-file`           | Open file.                  |
 | `SPC f r` | `consult-recent-file` | Open recent file.           |
 | `SPC f s` | `save-buffer`         | Save current file.          |
-| `SPC f y` | _(lambda)_            | **Yank** file path.         |
+| `SPC f y` | *(lambda)*            | **Yank** file path.         |
 | `SPC f D` | `crux-delete-file...` | **Delete** file and buffer. |
 | `SPC f R` | `crux-rename-file...` | **Rename** file and buffer. |
-| `SPC f c` | _(lambda)_            | Edit `init-keys.el`.        |
+| `SPC f c` | *(lambda)*            | Edit `init-keys.el`.        |
 
 #### 📑 Buffers (`SPC b`)
 
@@ -80,18 +88,23 @@ A minimalist, high-performance Emacs configuration built with `straight.el` and 
 | `SPC b k`   | `kill-current-buffer`  | Kill buffer.             |
 | `SPC b r`   | `revert-buffer`        | Reload buffer from disk. |
 | `SPC b n/p` | `next/previous-buffer` | Cycle buffers.           |
-| `SPC b Y`   | _(lambda)_             | **Yank** buffer name.    |
+| `SPC b Y`   | *(lambda)*             | **Yank** buffer name.    |
 | `SPC b N`   | `make-empty-file...`   | Create new empty buffer. |
 
 #### 🚀 Projects (`SPC p`)
 
-| Key       | Command                  | Description               |
-| :-------- | :----------------------- | :------------------------ |
-| `SPC p p` | `project-switch-project` | **Switch Project**.       |
-| `SPC p f` | `project-find-file`      | Find file in project.     |
-| `SPC p b` | `consult-project-buffer` | Switch buffer in project. |
-| `SPC p k` | `project-kill-buffers`   | Kill all project buffers. |
-| `SPC p r` | `project-remember...`    | Remember project root.    |
+| Key       | Command                    | Description                    |
+| :-------- | :------------------------- | :----------------------------- |
+| `SPC p p` | `project-switch-project`   | **Switch Project**.            |
+| `SPC p f` | `project-find-file`        | Find file in project.          |
+| `SPC p b` | `consult-project-buffer`   | Switch buffer in project.      |
+| `SPC p c` | `project-compile`          | **Compile** (Make/Cargo/etc).  |
+| `SPC p s` | `project-find-regexp`      | **Search** Text (Grep).        |
+| `SPC p r` | `project-query-replace...` | **Replace** Text (Refactor).   |
+| `SPC p t` | `project-shell`            | Open Shell in Root.            |
+| `SPC p g` | `magit-project-status`     | Open Magit in Root.            |
+| `SPC p D` | `project-remember...`      | **Discover** new projects.     |
+| `SPC p x` | `project-forget-project`   | **Forget** project.            |
 
 #### 🔍 Search (`SPC s`)
 
@@ -122,14 +135,21 @@ A minimalist, high-performance Emacs configuration built with `straight.el` and 
 | `SPC c f` | `apheleia-format...` | **Format Buffer**.        |
 | `SPC c e` | `consult-flymake`    | **List Errors**.          |
 
-#### 🚨 Diagnostics (`SPC x`)
+#### 📝 Snippets (`SPC i`)
 
-| Key       | Command                  | Description              |
-| :-------- | :----------------------- | :----------------------- |
-| `SPC x x` | `consult-flymake`        | **List Errors**.         |
-| `SPC x n` | `flymake-goto-next...`   | Next Error.              |
-| `SPC x p` | `flymake-goto-prev...`   | Previous Error.          |
-| `SPC x b` | `flymake-show-buffer...` | Show Buffer Diagnostics. |
+| Key       | Command            | Description         |
+| :-------- | :----------------- | :------------------ |
+| `SPC i s` | `yas-insert-snippet` | **Insert** snippet. |
+| `SPC i n` | `yas-new-snippet`    | Create new snippet. |
+| `SPC i v` | `yas-visit-snippet-file` | Edit snippet.   |
+
+#### 🖥️ UI & Toggles (`SPC t`)
+
+| Key       | Command               | Description          |
+| :-------- | :-------------------- | :------------------- |
+| `SPC t t` | `consult-theme`       | Switch Theme.        |
+| `SPC t l` | `display-line-numb...`| Toggle Line Numbers. |
+| `SPC t z` | `olivetti-mode`       | Toggle **Zen Mode**. |
 
 #### 🪟 Windows (`SPC w`)
 
@@ -142,25 +162,7 @@ A minimalist, high-performance Emacs configuration built with `straight.el` and 
 | `SPC w =`   | `balance-windows`      | Balance Sizes.       |
 | `SPC w +/-` | `enlarge/shrink...`    | Resize Width.        |
 
-#### 🔍 Zoom (`SPC z`)
-
-| Key       | Command               | Description |
-| :-------- | :-------------------- | :---------- |
-| `SPC z +` | `text-scale-increase` | Zoom In.    |
-| `SPC z -` | `text-scale-decrease` | Zoom Out.   |
-| `SPC z 0` | `text-scale-set 0`    | Reset Zoom. |
-
-#### ❓ Help (`SPC h`)
-
-| Key       | Command             | Description        |
-| :-------- | :------------------ | :----------------- |
-| `SPC h f` | `describe-function` | Describe Function. |
-| `SPC h v` | `describe-variable` | Describe Variable. |
-| `SPC h k` | `describe-key`      | Describe Keybind.  |
-| `SPC h m` | `describe-mode`     | Describe Mode.     |
-| `SPC h b` | `describe-bindings` | List all bindings. |
-
----
+-----
 
 ### 🕹️ Editing (Evil & General)
 
@@ -176,9 +178,9 @@ A minimalist, high-performance Emacs configuration built with `straight.el` and 
 
 | Key     | Command           | Description                                |
 | :------ | :---------------- | :----------------------------------------- |
-| `C-:`   | `avy-goto-char`   | **Jump**. Type char -\> Hint -\> Teleport. |
-| `C-'`   | `avy-goto-char-2` | **Jump**. Type 2 chars -\> Hint.           |
-| `M-g w` | `avy-goto-word-1` | **Jump**. Type word -\> Hint.              |
+| `C-:`   | `avy-goto-char`   | **Jump**. Type char -\> Hint -\> Teleport.   |
+| `C-'`   | `avy-goto-char-2` | **Jump**. Type 2 chars -\> Hint.            |
+| `M-g w` | `avy-goto-word-1` | **Jump**. Type word -\> Hint.               |
 | `C-x b` | `consult-buffer`  | Quick Switch Buffer.                       |
 | `M-s r` | `consult-ripgrep` | Quick Project Search.                      |
 | `C-.`   | `embark-act`      | **Act** on thing under cursor.             |

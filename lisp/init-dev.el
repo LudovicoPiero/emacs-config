@@ -35,11 +35,31 @@
     "d" #'gdb))
 
 ;; -- TOOLS --
+(use-package yasnippet
+  :hook (prog-mode . yas-minor-mode)
+  :config
+  (yas-reload-all)
+  :general
+  (my-leader-def
+    "i"   '(:ignore t :which-key "insert")
+    "is"  '(yas-insert-snippet :which-key "insert snippet")
+    "in"  '(yas-new-snippet :which-key "new snippet")
+    "iv"  '(yas-visit-snippet-file :which-key "edit snippet")))
+
+(use-package yasnippet-snippets
+  :after yasnippet)
 
 (use-package magit
   :commands (magit-status magit-get-current-branch)
   :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  :general
+  (my-leader-def
+    "g"   '(:ignore t :which-key "git")
+    "gg"  '(magit-status :which-key "status")
+    "gf"  '(magit-file-dispatch :which-key "file dispatch")
+    "gb"  '(magit-blame :which-key "blame")
+    "gd"  '(magit-diff-buffer-file :which-key "diff buffer")))
 
 (use-package corfu
   :init
@@ -64,7 +84,6 @@
   (global-treesit-auto-mode))
 
 (use-package eglot
-  ;; Ensure Eglot is triggered for these modes
   :hook
   ((nix-mode python-ts-mode go-ts-mode rust-ts-mode c++-ts-mode lua-mode js-ts-mode) . eglot-ensure)
   :commands (eglot-rename eglot-code-actions eglot-format)
@@ -80,13 +99,20 @@
   (setq eglot-events-buffer-size 0)
 
   :general
-  ;; Buffer-local keys (only active when in eglot mode)
+  ;; Buffer-local keys (active only in eglot buffers)
   (general-def
     :keymaps 'eglot-mode-map
     "C-c l r" #'eglot-rename
     "C-c l a" #'eglot-code-actions
     "C-c l d" #'eldoc
-    "C-c l f" #'eglot-format))
+    "C-c l f" #'eglot-format)
+
+  ;; Global Leader Keys for LSP
+  (my-leader-def
+    "c"   '(:ignore t :which-key "code")
+    "ca"  '(eglot-code-actions :which-key "code actions")
+    "cr"  '(eglot-rename :which-key "rename")
+    "cd"  '(eldoc :which-key "doc info")))
 
 (use-package apheleia
   :commands (apheleia-format-buffer)
@@ -95,36 +121,36 @@
   (setq apheleia-on-save nil)
   :general
   (general-def
-    "C-c f" #'apheleia-format-buffer))
+    "C-c f" #'apheleia-format-buffer)
+  (my-leader-def
+    "cf" '(apheleia-format-buffer :which-key "format buffer")))
 
 (use-package flymake
   :commands (flymake-goto-next-error flymake-goto-prev-error flymake-show-buffer-diagnostics)
   :general
+  ;; Quick navigation with Alt-n/p
   (general-def
     "M-n" #'flymake-goto-next-error
-    "M-p" #'flymake-goto-prev-error))
+    "M-p" #'flymake-goto-prev-error)
 
-;; -- GLOBAL DEVELOPMENT KEYBINDINGS --
-(my-leader-def
-  ;; Git
-  "g"   '(:ignore t :which-key "git")
-  "gg"  #'magit-status
-  "gf"  #'magit-file-dispatch
-  "gb"  #'magit-blame
+  ;; Leader keys
+  (my-leader-def
+    "x"   '(:ignore t :which-key "diagnostics")
+    "xx"  '(consult-flymake :which-key "list errors")
+    "xn"  '(flymake-goto-next-error :which-key "next error")
+    "xp"  '(flymake-goto-prev-error :which-key "prev error")
+    "xb"  '(flymake-show-buffer-diagnostics :which-key "buffer diagnostics")))
 
-  ;; Code / LSP
-  "c"   '(:ignore t :which-key "code")
-  "ca"  #'eglot-code-actions
-  "cr"  #'eglot-rename
-  "cd"  #'eldoc
-  "cf"  #'apheleia-format-buffer
-
-  ;; Diagnostics
-  "x"   '(:ignore t :which-key "diagnostics")
-  "xx"  #'consult-flymake
-  "xn"  #'flymake-goto-next-error
-  "xp"  #'flymake-goto-prev-error
-  "xb"  #'flymake-show-buffer-diagnostics
-  "ce"  #'consult-flymake)
+;; --- GIT GUTTER (Diff-hl) ---
+;; Shows uncommitted changes in the sidebar (fringe)
+(use-package diff-hl
+  :ensure t
+  :hook ((dired-mode . diff-hl-dired-mode)
+         (magit-pre-refresh . diff-hl-magit-pre-refresh)
+         (magit-post-refresh . diff-hl-magit-post-refresh))
+  :init
+  (global-diff-hl-mode)
+  ;; Show changes on the fly (don't wait for save)
+  (diff-hl-flydiff-mode))
 
 (provide 'init-dev)

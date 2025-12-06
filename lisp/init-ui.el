@@ -42,6 +42,10 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
+;; Shows the actual color background for hex codes (e.g., #ffffff)
+(use-package rainbow-mode
+  :hook (prog-mode . rainbow-mode))
+
 ;; UI Toggles
 (my-leader-def
   "t"   '(:ignore t :which-key "toggle")

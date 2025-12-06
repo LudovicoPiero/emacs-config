@@ -17,8 +17,8 @@
 (condition-case err
     (progn
       (require 'init-pkg)   ; Bootstrap Straight & Use-package & General
-      (require 'init-keys)  ; Evil Mode 
       (require 'init-core)  ; Better defaults
+      (require 'init-keys)  ; Evil Mode
       (require 'init-ui)    ; Theme & Fonts
       (require 'init-nav)   ; Navigation
       (require 'init-dev))  ; Coding tools

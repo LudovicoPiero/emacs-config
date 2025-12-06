@@ -18,13 +18,16 @@
   (vertico-mouse-mode 1))
 
 (use-package orderless
+  :ensure t
   :custom
   (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package marginalia
-  :after vertico
-  :init (marginalia-mode))
+  :ensure t
+  :commands (marginalia-mode marginalia-cycle)
+  :hook (after-init . marginalia-mode))
 
 (use-package consult
   :hook (completion-list-mode . consult-preview-at-point-mode)
@@ -53,30 +56,58 @@
     "sk"  #'consult-yank-pop))  ; Search kill-ring (yank history)
 
 (use-package embark
-  :commands (embark-act embark-dwim embark-bindings)
-  :init (setq prefix-help-command #'embark-prefix-help-command)
+  ;; Embark is an Emacs package that acts like a context menu, allowing
+  ;; users to perform context-sensitive actions on selected items
+  ;; directly from the completion interface.
+  :ensure t
+  :commands (embark-act
+             embark-dwim
+             embark-export
+             embark-collect
+             embark-bindings
+             embark-prefix-help-command)
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command)
+
   :config
+  ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
-                 (window-parameters (mode-line-format . none))))
-  :general
-  (general-def
-    "C-."   #'embark-act
-    "C-;"   #'embark-dwim
-    "C-h B" #'embark-bindings))
+                 (window-parameters (mode-line-format . none)))))
 
 (use-package embark-consult
-  :hook (embark-collect-mode . consult-preview-at-point-mode))
+  :ensure t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
 
-;; --- NEW: Project Bindings (Doom Style) ---
-;; Built-in project management (lightweight alternative to Projectile)
-(my-leader-def
-  "p"   '(:ignore t :which-key "project")
-  "pf"  #'project-find-file                ; Find file in project
-  "pp"  #'project-switch-project           ; Switch to another project
-  "pb"  #'consult-project-buffer           ; Switch to buffer in current project
-  "pk"  #'project-kill-buffers             ; Kill all project buffers
-  "pr"  #'project-remember-projects-under) ; Discover projects
+(use-package project
+  :ensure nil
+  :straight nil
+  :general
+  (my-leader-def
+    "p"   '(:ignore t :which-key "project")
+    ;; Navigation
+    "pf"  #'project-find-file                 ; Find file in project
+    "pd"  #'project-dired                     ; Open project root in dired
+    "pp"  #'project-switch-project            ; Switch to another project
+    "pb"  #'consult-project-buffer            ; Switch to buffer in current project
+
+    ;; Actions / Workflow
+    "pc"  #'project-compile                   ; Run 'make', 'cargo build', etc.
+    "ps"  #'project-find-regexp               ; Grep/Search text in project
+    "pr"  #'project-query-replace-regexp      ; Interactive find/replace (Refactoring)
+    "pt"  #'project-shell                     ; Open shell in project root
+    "pg"  #'magit-project-status              ; Open Magit for this project
+
+    ;; Management
+    "pk"  #'project-kill-buffers              ; Kill all project buffers
+    "px"  #'project-forget-project            ; Remove project from list (Forget)
+    "pD"  #'project-remember-projects-under)) ; Discover new projects
 
 (provide 'init-nav)

@@ -14,12 +14,15 @@
   :config
   (evil-collection-init))
 
-;; -- Undo Tree --
 (use-package undo-tree
   :ensure t
   :config
   (global-undo-tree-mode)
-  (evil-set-undo-system 'undo-tree))
+  (evil-set-undo-system 'undo-tree)
+
+  ;; No littering
+  (setq undo-tree-history-directory-alist
+        `(("." . ,(expand-file-name "undo-tree/" user-emacs-directory)))))
 
 ;; -- EVIL COMMENTARY --
 (use-package evil-commentary

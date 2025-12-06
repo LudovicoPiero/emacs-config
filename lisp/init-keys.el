@@ -6,7 +6,6 @@
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
-  (setq evil-undo-system 'undo-redo)
   :config
   (evil-mode 1))
 
@@ -14,6 +13,13 @@
   :after evil
   :config
   (evil-collection-init))
+
+;; -- Undo Tree --
+(use-package undo-tree
+  :ensure t
+  :config
+  (global-undo-tree-mode)
+  (evil-set-undo-system 'undo-tree))
 
 ;; -- EVIL COMMENTARY --
 (use-package evil-commentary

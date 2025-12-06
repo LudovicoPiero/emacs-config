@@ -9,8 +9,13 @@
     "M-g w" #'avy-goto-word-1))
 
 (use-package vertico
-  :init (vertico-mode)
-  :config (setq vertico-cycle t))
+  :ensure t
+  :config
+  (setq vertico-cycle t)
+  (setq vertico-count 15)
+  (setq vertico-resize nil)
+  (vertico-mode 1)
+  (vertico-mouse-mode 1))
 
 (use-package orderless
   :custom

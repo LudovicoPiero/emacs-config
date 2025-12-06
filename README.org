@@ -1,0 +1,155 @@
+#+TITLE: Modern Emacs Configuration
+#+AUTHOR: LudovicoPiero
+#+DESCRIPTION: A high-performance, minimalist Emacs config built with Straight.el, Evil, and Nix.
+#+OPTIONS: toc:2 num:nil
+
+* Overview
+A minimalist, high-performance Emacs configuration built on top of the ~minimal-emacs.d~ foundation. It uses ~straight.el~ for package management and is designed to integrate seamlessly with **Nix** development environments.
+
+** 🚀 Core Features
+- **The "Jail" Architecture**: All plugins, backups, elpa, and save files are strictly isolated in =~/.emacs.d/var/=. The root directory stays clean.
+- **High Performance**:
+  - Garbage Collection tuning via ~early-init.el~.
+  - **Eglot Booster**: Uses a Rust binary to parse LSP JSON 10x faster.
+- **Nix Integration**:
+  - ~envrc~: Automatically loads direnv/nix-shell environments per buffer.
+  - ~treesit-auto~: Configured to work with shared libraries.
+- **Modern Navigation**: Full "Vertico Stack" (Vertico, Consult, Orderless, Marginalia, Embark).
+- **Development**:
+  - **LSP**: Eglot (Built-in) + Corfu (Icons & Docs) + Flymake.
+  - **Git**: Magit + Diff-hl (Gutter).
+  - **Formatter**: Apheleia (Auto-formatting).
+- **Visuals**: Catppuccin Mocha theme, Doom Modeline, and Org Modern.
+
+* 🛠️ Installation
+
+** 1. Clone the repository
+#+BEGIN_SRC bash
+git clone git@github.com:LudovicoPiero/emacs-config.git ~/.emacs.d
+#+END_SRC
+
+** 2. External Dependencies (Nix)
+This configuration relies on external binaries provided by your Nix shell or system packages. Ensure the following are available in your ~$PATH~:
+
+- **Core**: ~git~, ~ripgrep~, ~fd~, ~cmake~, ~libtool~.
+- **LSP & Boost**: ~emacs-lsp-booster~ (Crucial for speed), ~basedpyright~, ~nil~, ~gopls~, ~rust-analyzer~, ~clangd~.
+- **Formatters**: ~nixfmt~, ~gofumpt~, ~black~, ~clang-format~.
+
+** 3. First Launch
+On the first run, ~straight.el~ will bootstrap itself and compile all packages. This may take a few minutes.
+
+* 📂 Project Structure
+
+#+BEGIN_SRC text
+~/.emacs.d/
+├── early-init.el         # GUI suppression & GC tuning
+├── init.el               # Minimalist Core (James Cherti base)
+├── pre-early-init.el     # The "Jail" setup (Redirects vars to var/)
+├── post-init.el          # The actual Module Loader
+├── lisp/
+│   ├── init-pkg.el       # Straight.el & General.el (Leader setup)
+│   ├── init-core.el      # Defaults, Crux, Vundo, Org, Multi-cursors
+│   ├── init-ui.el        # Theme (Catppuccin), Modeline, Zoom
+│   ├── init-nav.el       # Vertico, Consult, Embark, Project
+│   ├── init-dev.el       # LSP (Eglot), Treesitter, Magit, Terminal
+│   └── init-keys.el      # Evil setup & Global/Orphan keys
+└── var/                  # AUTOMATICALLY CREATED (The Jail)
+    ├── elpa/             # Packages
+    ├── straight/         # Packages
+    ├── undo/             # Undo history
+    └── auto-save/        # Auto saves
+#+END_SRC
+
+* ⌨️ Keybindings
+The Leader key is set to =SPC=.
+
+** 🟢 General & Session
+| Key       | Command                    | Description                 |
+|-----------+----------------------------+-----------------------------|
+| =SPC SPC= | ~execute-extended-command~ | *M-x* Run command           |
+| =SPC .=   | ~find-file~                | Quick Find File             |
+| =SPC TAB= | ~mode-line-other-buffer~   | Quick Last Buffer           |
+| =SPC u=   | ~vundo~                    | Visual Undo Tree            |
+| =SPC /=   | ~evil-commentary-line~     | Toggle Comment              |
+| =SPC q q= | ~save-buffers-kill-term~   | Quit Emacs                  |
+| =SPC q R= | ~restart-emacs~            | Restart Emacs               |
+
+** 📂 Files (=SPC f=) & Buffers (=SPC b=)
+| Key      | Command                         | Description              |
+|----------+---------------------------------+--------------------------|
+| =SPC f f= | ~find-file~                     | Open File                |
+| =SPC f r= | ~consult-recent-file~           | Recent Files             |
+| =SPC f s= | ~save-buffer~                   | Save                     |
+| =SPC f D= | ~crux-delete-file-and-buffer~   | Delete current file      |
+| =SPC f R= | ~crux-rename-file-and-buffer~   | Rename current file      |
+| =SPC f y= | ~(lambda)~                      | Yank file path           |
+|----------+---------------------------------+--------------------------|
+| =SPC b b= | ~consult-buffer~                | Switch Buffer            |
+| =SPC b k= | ~kill-current-buffer~           | Kill Buffer              |
+| =SPC b r= | ~revert-buffer~                 | Reload from disk         |
+| =SPC b n= | ~next-buffer~                   | Next Buffer              |
+| =SPC b p= | ~previous-buffer~               | Previous Buffer          |
+
+** 🚀 Project Management (=SPC p=)
+Powered by built-in ~project.el~ and ~consult~.
+
+| Key      | Command                        | Description               |
+|----------+--------------------------------+---------------------------|
+| =SPC p p= | ~project-switch-project~       | Switch Project            |
+| =SPC p f= | ~project-find-file~            | Find file in project      |
+| =SPC p b= | ~consult-project-buffer~       | Buffer in project         |
+| =SPC p s= | ~project-find-regexp~          | Grep / Search Text        |
+| =SPC p r= | ~project-query-replace-regexp~ | Refactor (Replace text)   |
+| =SPC p c= | ~project-compile~              | Run Compile (Make/Cargo)  |
+| =SPC p t= | ~project-shell~                | Open Shell in Root        |
+| =SPC p k= | ~project-kill-buffers~         | Kill all project buffers  |
+
+** 💻 Code & LSP (=SPC c=)
+Powered by **Eglot**.
+
+| Key       | Command                | Description            |
+|-----------+------------------------+------------------------|
+| =SPC c a= | ~eglot-code-actions~   | Code Actions (Fixes)   |
+| =SPC c r= | ~eglot-rename~         | Rename Symbol          |
+| =SPC c d= | ~eldoc~                | Show Documentation     |
+| =SPC c f= | ~apheleia-format-buff~ | Format Buffer          |
+| =SPC x x= | ~consult-flymake~      | List Errors            |
+
+** 🌲 Git (=SPC g=)
+| Key       | Command                 | Description             |
+|-----------+-------------------------+-------------------------|
+| =SPC g g= | ~magit-status~          | Magit Status Window     |
+| =SPC g b= | ~magit-blame~           | Toggle Blame            |
+| =SPC g f= | ~magit-file-dispatch~   | File Actions            |
+| =SPC g d= | ~magit-diff-buffer-file~| Diff current buffer     |
+
+** 🔍 Search (=SPC s=)
+| Key       | Command             | Description            |
+|-----------+---------------------+------------------------|
+| =SPC s s= | ~consult-line~      | Search within buffer   |
+| =SPC s p= | ~consult-ripgrep~   | Search Project (Rg)    |
+| =SPC s f= | ~consult-find~      | Find File (Recursive)  |
+| =SPC s i= | ~consult-imenu~     | Jump to Symbol         |
+| =SPC s h= | ~consult-history~   | Command History        |
+
+** 🖥️ Terminal & UI (=SPC o=, =SPC t=)
+| Key       | Command               | Description            |
+|-----------+-----------------------+------------------------|
+| =SPC o t= | ~vterm-toggle~        | Toggle Terminal        |
+| =SPC o T= | ~vterm~               | Fullscreen Terminal    |
+| =SPC t t= | ~consult-theme~       | Switch Theme           |
+| =SPC t l= | ~display-line-numbers~| Toggle Line Numbers    |
+| =SPC t w= | ~toggle-word-wrap~    | Toggle Word Wrap       |
+
+** 🪟 Windows & Zoom (=SPC w=, =SPC z=)
+| Key       | Command             | Description             |
+|-----------+---------------------+-------------------------|
+| =SPC w s= | ~split-window-below~| Split Horizontal        |
+| =SPC w v= | ~split-window-right~| Split Vertical          |
+| =SPC w d= | ~delete-window~     | Close Window            |
+| =SPC w m= | ~delete-other-wind~ | Maximize Window         |
+| =SPC w == | ~balance-windows~   | Balance Sizes           |
+|-----------+---------------------+-------------------------|
+| =SPC z += | ~text-scale-increase~| Zoom In                |
+| =SPC z -= | ~text-scale-decrease~| Zoom Out               |
+| =SPC z 0= | ~text-scale-set 0~  | Reset Zoom              |

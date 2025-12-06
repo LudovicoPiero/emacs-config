@@ -9,6 +9,10 @@
     :keymaps 'nix-mode-map
     "b" #'nix-build-buffer))
 
+(use-package envrc
+  :ensure t
+  :hook (after-init . envrc-global-mode))
+
 (use-package lua-mode
   :mode "\\.lua\\'")
 
@@ -64,10 +68,13 @@
 (use-package corfu
   :init
   (global-corfu-mode)
+  (corfu-popupinfo-mode) ; Enable documentation popups
   :custom
   (corfu-auto t)
   (corfu-cycle t)
   (corfu-quit-no-match nil)
+  (corfu-popupinfo-delay 0.2) ; Fast popup delay
+  (corfu-popupinfo-max-width 70)
   :general
   (general-def
     :keymaps 'corfu-map
@@ -75,6 +82,17 @@
     [tab] #'corfu-next
     "S-TAB" #'corfu-previous
     [backtab] #'corfu-previous))
+
+;; --- ICONS (Kind Icon) ---
+;; Adds VSCode-like icons to the completion menu
+(use-package kind-icon
+  :ensure t
+  :after corfu
+  :custom
+  (kind-icon-default-style
+   '(:padding 0 :stroke 0 :margin 0 :radius 0 :height 0.8 :scale 1.0))
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package treesit-auto
   :custom
@@ -96,7 +114,10 @@
   (add-to-list 'eglot-server-programs '((rust-mode rust-ts-mode) . ("rust-analyzer")))
   (add-to-list 'eglot-server-programs '((c++-mode c++-ts-mode) . ("clangd")))
 
-  (setq eglot-events-buffer-size 0)
+  ;; Configure Eglot logging
+  ;; :size 0 disables logging (improves performance)
+  ;; :format 'full or 'lisp usually
+  (setq eglot-events-buffer-config '(:size 0 :format full))
 
   :general
   ;; Buffer-local keys (active only in eglot buffers)
@@ -113,6 +134,15 @@
     "ca"  '(eglot-code-actions :which-key "code actions")
     "cr"  '(eglot-rename :which-key "rename")
     "cd"  '(eldoc :which-key "doc info")))
+
+;; --- PERFORMANCE: Eglot Booster ---
+;; Uses the external 'emacs-lsp-booster' binary
+;; to convert massive JSON responses into bytecode.
+(use-package eglot-booster
+  :straight (:type git :host github :repo "jdtsmith/eglot-booster")
+  :after eglot
+  :config
+  (eglot-booster-mode))
 
 (use-package apheleia
   :commands (apheleia-format-buffer)
@@ -152,5 +182,23 @@
   (global-diff-hl-mode)
   ;; Show changes on the fly (don't wait for save)
   (diff-hl-flydiff-mode))
+
+;; --- Vterm ---
+(use-package vterm
+  :ensure t
+  :commands vterm
+  :config
+  (setq vterm-max-scrollback 10000)
+  (setq vterm-timer-delay nil))
+
+(use-package vterm-toggle
+  :ensure t
+  :config
+  (setq vterm-toggle-fullscreen-p nil)
+  :general
+  (my-leader-def
+    "o"   '(:ignore t :which-key "terminal")
+    "ot" '(vterm-toggle :which-key "terminal toggle")
+    "oT" '(vterm :which-key "terminal full")))
 
 (provide 'init-dev)

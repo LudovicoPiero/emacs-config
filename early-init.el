@@ -109,7 +109,8 @@ Note that this should end with a directory separator.")
 
 ;; Prefer loading newer compiled files
 (setq load-prefer-newer t)
-(setq debug-on-error minimal-emacs-debug)
+(when minimal-emacs-debug
+  (setq debug-on-error minimal-emacs-debug))
 
 (defvar minimal-emacs--success nil)
 (defun minimal-emacs--check-success ()
@@ -146,11 +147,11 @@ pre-early-init.el, and post-early-init.el.")
   (let ((init-file (expand-file-name filename
                                      minimal-emacs-user-directory)))
     (if (not minimal-emacs-load-compiled-init-files)
-        (load init-file :no-error (not init-file-debug) :nosuffix)
+        (load init-file :no-error (not minimal-emacs-debug) :nosuffix)
       ;; Remove the file suffix (.el, .el.gz, etc.) to let the `load' function
       ;; select between .el and .elc files.
       (setq init-file (minimal-emacs--remove-el-file-suffix init-file))
-      (load init-file :no-error (not init-file-debug)))))
+      (load init-file :no-error (not minimal-emacs-debug)))))
 
 (minimal-emacs-load-user-init "pre-early-init.el")
 
@@ -467,7 +468,7 @@ this stage of initialization."
 
 ;; Setting use-package-expand-minimally to (t) results in a more compact output
 ;; that emphasizes performance over clarity.
-(setq use-package-expand-minimally (not minimal-emacs-debug))
+(setq use-package-expand-minimally (not noninteractive))
 
 (setq package-quickstart-file
       (expand-file-name "package-quickstart.el" user-emacs-directory))

@@ -1,6 +1,6 @@
 ;;; init.el --- Init -*- lexical-binding: t; -*-
 
-;; Author: James Cherti
+;; Author: James Cherti <https://www.jamescherti.com/contact/>
 ;; URL: https://github.com/jamescherti/minimal-emacs.d
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: maint
@@ -245,8 +245,7 @@
 (setq history-length 300)
 (setq savehist-save-minibuffer-history t)  ;; Default
 (setq savehist-additional-variables
-      '(kill-ring                        ; clipboard
-        register-alist                   ; macros
+      '(register-alist                   ; macros
         mark-ring global-mark-ring       ; marks
         search-ring regexp-search-ring)) ; searches
 

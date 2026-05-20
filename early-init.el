@@ -30,7 +30,9 @@
 
 ;; Temporarily raise the garbage collection threshold to its maximum value.
 ;; It will be restored later to controlled values.
-(setq gc-cons-threshold most-positive-fixnum)
+(if noninteractive
+    (setq gc-cons-threshold 268435456) ; 256 Mb
+  (setq gc-cons-threshold most-positive-fixnum))
 (setq gc-cons-percentage 1.0)
 
 ;;; Variables
@@ -194,10 +196,12 @@ pre-early-init.el, and post-early-init.el.")
 
 ;;; Native compilation and Byte compilation
 
-(unless (and (featurep 'native-compile)
-             (fboundp 'native-comp-available-p)
-             (native-comp-available-p))
+(if (and (featurep 'native-compile)
+         (fboundp 'native-comp-available-p)
+         (native-comp-available-p))
+    (setq package-native-compile t)
   ;; Deactivate the `native-compile' feature if it is not available
+  (setq native-comp-jit-compilation nil)
   (setq features (delq 'native-compile features)))
 
 (setq native-comp-warning-on-missing-source minimal-emacs-debug
@@ -212,7 +216,7 @@ pre-early-init.el, and post-early-init.el.")
 (set-language-environment "UTF-8")
 
 ;; Increase how much is read from processes in a single chunk
-(setq read-process-output-max (* 2 1024 1024))  ; 1024kb
+(setq read-process-output-max (* 4 1024 1024))  ; 4096kb
 
 (setq process-adaptive-read-buffering nil)
 
@@ -220,36 +224,53 @@ pre-early-init.el, and post-early-init.el.")
 (setq ffap-machine-p-known 'reject)
 
 (setq warning-minimum-level (if minimal-emacs-debug :warning :error))
-(setq warning-suppress-types '((lexical-binding)))
+
+;; Establish a strict baseline for suppressed warnings.
+;; - defvaralias: Emacs emits warnings when an alias is defined for a variable
+;;   that already exists. In modern, lazy-loaded configurations, this occurs
+;;   frequently and is almost always benign.
+;; - lexical-binding: Emacs warns about third-party packages that lack
+;;   lexical-binding. Because end users cannot easily fix upstream source code,
+;;   these warnings create noise without providing actionable value.
+(setq warning-suppress-types '((defvaralias) (lexical-binding)))
+(setq warning-inhibit-types '((files missing-lexbind-cookie)))
 
 (when minimal-emacs-debug
   (setq message-log-max 16384))
-
-;; In PGTK, this timeout introduces latency. Reducing it from the default 0.1
-;; improves responsiveness of childframes and related packages.
-(when (boundp 'pgtk-wait-for-event-timeout)
-  (setq pgtk-wait-for-event-timeout 0.001))
 
 ;; Disable warnings from the legacy advice API. They aren't useful.
 (setq ad-redefinition-action 'accept)
 
 ;;; Performance: Miscellaneous options
 
-;; Font compacting can be very resource-intensive, especially when rendering
-;; icon fonts on Windows. This will increase memory usage.
-(setq inhibit-compacting-font-caches t)
+;; A second, case-insensitive pass over `auto-mode-alist' is time wasted.
+;; No second pass of case-insensitive search over auto-mode-alist.
+(setq auto-mode-case-fold nil)
 
-(when (not noninteractive)
+(unless minimal-emacs-debug
+  ;; Unset command line options irrelevant to the current OS. These options
+  ;; are still processed by `command-line-1` but have no effect.
+  (unless (eq system-type 'darwin)
+    (setq command-line-ns-option-alist nil))
+  (unless (memq initial-window-system '(x pgtk))
+    (setq command-line-x-option-alist nil)))
+
+(unless noninteractive
+  ;; In PGTK, this timeout introduces latency. Reducing it from the default 0.1
+  ;; improves responsiveness of childframes and related packages.
+  (when (boundp 'pgtk-wait-for-event-timeout)
+    (setq pgtk-wait-for-event-timeout 0.001))
+
+  ;; Font compacting can be very resource-intensive, especially when rendering
+  ;; icon fonts on Windows. This will increase memory usage.
+  (setq inhibit-compacting-font-caches t)
+
   ;; Resizing the Emacs frame can be costly when changing the font. Disable this
   ;; to improve startup times with fonts larger than the system default.
   (setq frame-resize-pixelwise t)
 
   ;; Without this, Emacs will try to resize itself to a specific column size
   (setq frame-inhibit-implied-resize t)
-
-  ;; A second, case-insensitive pass over `auto-mode-alist' is time wasted.
-  ;; No second pass of case-insensitive search over auto-mode-alist.
-  (setq auto-mode-case-fold nil)
 
   ;; Reduce *Message* noise at startup. An empty scratch buffer (or the
   ;; dashboard) is more than enough, and faster to display.
@@ -258,6 +279,9 @@ pre-early-init.el, and post-early-init.el.")
   (setq initial-buffer-choice nil
         inhibit-startup-buffer-menu t
         inhibit-x-resources t)
+
+  ;; Disable startup screens and messages
+  (setq inhibit-splash-screen t)
 
   ;; Disable bidirectional text scanning for a modest performance boost.
   (setq-default bidi-display-reordering 'left-to-right
@@ -271,15 +295,7 @@ pre-early-init.el, and post-early-init.el.")
 
   ;; Suppress the vanilla startup screen completely. We've disabled it with
   ;; `inhibit-startup-screen', but it would still initialize anyway.
-  (advice-add 'display-startup-screen :override #'ignore)
-
-  (unless minimal-emacs-debug
-    ;; Unset command line options irrelevant to the current OS. These options
-    ;; are still processed by `command-line-1` but have no effect.
-    (unless (eq system-type 'darwin)
-      (setq command-line-ns-option-alist nil))
-    (unless (memq initial-window-system '(x pgtk))
-      (setq command-line-x-option-alist nil))))
+  (advice-add 'display-startup-screen :override #'ignore))
 
 ;;; Performance: File-name-handler-alist
 
@@ -306,7 +322,8 @@ this stage of initialization."
                         minimal-emacs--old-file-name-handler-alist))))
 
 (when (and minimal-emacs-optimize-file-name-handler-alist
-           (not minimal-emacs-debug))
+           (not minimal-emacs-debug)
+           (not noninteractive))
   ;; Determine the state of bundled libraries using calc-loaddefs.el. If
   ;; compressed, retain the gzip handler in `file-name-handler-alist`. If
   ;; compiled or neither, omit the gzip handler during startup for improved
@@ -403,22 +420,6 @@ this stage of initialization."
 
 ;;; UI elements
 
-(setq frame-title-format minimal-emacs-frame-title-format
-      icon-title-format minimal-emacs-frame-title-format)
-
-;; Disable startup screens and messages
-(setq inhibit-splash-screen t)
-
-;; I intentionally avoid calling `menu-bar-mode', `tool-bar-mode', and
-;; `scroll-bar-mode' because manipulating frame parameters can trigger or queue
-;; a superfluous and potentially expensive frame redraw at startup, depending
-;; on the window system. The variables must also be set to `nil' so users don't
-;; have to call the functions twice to re-enable them.
-(unless (memq 'menu-bar minimal-emacs-ui-features)
-  (push '(menu-bar-lines . 0) default-frame-alist)
-  (unless (memq window-system '(mac ns))
-    (setq menu-bar-mode nil)))
-
 (defun minimal-emacs--setup-toolbar (&rest _)
   "Setup the toolbar."
   (when (fboundp 'tool-bar-setup)
@@ -427,36 +428,49 @@ this stage of initialization."
       (funcall 'tool-bar-setup))))
 
 (unless noninteractive
+  (setq frame-title-format minimal-emacs-frame-title-format
+        icon-title-format minimal-emacs-frame-title-format)
+
+  ;; I intentionally avoid calling `menu-bar-mode', `tool-bar-mode', and
+  ;; `scroll-bar-mode' because manipulating frame parameters can trigger or queue
+  ;; a superfluous and potentially expensive frame redraw at startup, depending
+  ;; on the window system. The variables must also be set to `nil' so users don't
+  ;; have to call the functions twice to re-enable them.
+  (unless (memq 'menu-bar minimal-emacs-ui-features)
+    (push '(menu-bar-lines . 0) default-frame-alist)
+    (unless (memq window-system '(mac ns))
+      (setq menu-bar-mode nil)))
+
   (when (fboundp 'tool-bar-setup)
     ;; Temporarily override the tool-bar-setup function to prevent it from
     ;; running during the initial stages of startup
     (advice-add 'tool-bar-setup :override #'ignore)
 
     (advice-add 'startup--load-user-init-file :after
-                #'minimal-emacs--setup-toolbar)))
+                #'minimal-emacs--setup-toolbar))
 
-(unless (memq 'tool-bar minimal-emacs-ui-features)
-  (push '(tool-bar-lines . 0) default-frame-alist)
-  (setq tool-bar-mode nil))
+  (unless (memq 'tool-bar minimal-emacs-ui-features)
+    (push '(tool-bar-lines . 0) default-frame-alist)
+    (setq tool-bar-mode nil))
 
-(setq default-frame-scroll-bars 'right)
-(push '(vertical-scroll-bars) default-frame-alist)
-(push '(horizontal-scroll-bars) default-frame-alist)
-(setq scroll-bar-mode nil)
+  (setq default-frame-scroll-bars 'right)
+  (push '(vertical-scroll-bars) default-frame-alist)
+  (push '(horizontal-scroll-bars) default-frame-alist)
+  (setq scroll-bar-mode nil)
 
-(unless (memq 'tooltips minimal-emacs-ui-features)
-  (when (bound-and-true-p tooltip-mode)
-    (tooltip-mode -1)))
+  (unless (memq 'tooltips minimal-emacs-ui-features)
+    (when (bound-and-true-p tooltip-mode)
+      (tooltip-mode -1)))
 
-;; Disable GUIs because they are inconsistent across systems, desktop
-;; environments, and themes, and they don't match the look of Emacs.
-(unless (memq 'dialogs minimal-emacs-ui-features)
-  (setq use-file-dialog nil)
-  (setq use-dialog-box nil))
+  ;; Disable GUIs because they are inconsistent across systems, desktop
+  ;; environments, and themes, and they don't match the look of Emacs.
+  (unless (memq 'dialogs minimal-emacs-ui-features)
+    (setq use-file-dialog nil)
+    (setq use-dialog-box nil)))
 
 ;;; Security
-(setq gnutls-verify-error t)  ; Prompts user if there are certificate issues
-(setq tls-checktrust t)  ; Ensure SSL/TLS connections undergo trust verification
+(setq gnutls-verify-error t)  ; Prompts if there are cert issues
+(setq tls-checktrust gnutls-verify-error)  ; Ensure SSL/TLS connections checks
 (setq gnutls-min-prime-bits 3072)  ; Stronger GnuTLS encryption
 
 ;; This results in a more compact output that emphasizes performance
@@ -486,7 +500,7 @@ this stage of initialization."
   (minimal-emacs-load-user-init "post-early-init.el"))
 
 ;; Local variables:
-;; byte-compile-warnings: (not obsolete free-vars)
+;; byte-compile-warnings: (not free-vars)
 ;; End:
 
 ;;; early-init.el ends here

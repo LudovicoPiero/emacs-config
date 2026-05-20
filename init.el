@@ -85,7 +85,9 @@
 
 ;; By default, Emacs "updates" its ui more often than it needs to
 (setq which-func-update-delay 1.0)
-(setq idle-update-delay which-func-update-delay)  ;; Obsolete in >= 30.1
+(with-no-warnings
+  ;; Obsolete in >= 30.1
+  (setq idle-update-delay which-func-update-delay))
 
 (defalias #'view-hello-file #'ignore)  ; Never show the hello file
 
@@ -99,6 +101,9 @@
 (setq truncate-string-ellipsis "…")
 
 (setq display-time-default-load-average nil) ; Omit load average
+
+;; Force the mouse to paste text at the active cursor position.
+(setq mouse-yank-at-point t)
 
 ;;; Show-paren
 
@@ -119,8 +124,6 @@
 (setq bookmark-save-flag 1)
 
 (setq uniquify-buffer-name-style 'forward)
-
-(setq remote-file-name-inhibit-cache 50)
 
 ;; Disable fontification during user input to reduce lag in large buffers.
 ;; Also helps marginally with scrolling performance.
@@ -158,7 +161,11 @@
 
 ;;; Tramp
 
-(setq tramp-verbose 1)
+(setq tramp-verbose 1
+      remote-file-name-inhibit-cache 50
+      ;; Disable lockfiles and auto-saves for remote files to eliminate lag
+      remote-file-name-inhibit-locks t
+      remote-file-name-inhibit-auto-save-visited t)
 
 ;;; Files
 
@@ -181,6 +188,10 @@
 (setq split-width-threshold 170
       split-height-threshold nil)
 
+;; Increase threshold for large-file warning to reduce prompts when opening
+;; moderately large files while still preserving safeguards for large files.
+(setq large-file-warning-threshold (* 100 1024 1024)) ; 100 Mb
+
 ;;; comint (general command interpreter in a window)
 
 (setq ansi-color-for-comint-mode t
@@ -191,6 +202,9 @@
 
 (setq compilation-ask-about-save nil
       compilation-always-kill t
+      ;; Parse up to 2048 characters per line in compilation buffers. This
+      ;; safely catches deep errors and long paths without risking hangs.
+      compilation-max-output-line-length 2048
       compilation-scroll-output 'first-error)
 
 ;; Skip confirmation prompts when creating a new file or buffer
@@ -279,7 +293,6 @@
 ;; `recentf' is an that maintains a list of recently accessed files.
 (setq recentf-max-saved-items 300) ; default is 20
 (setq recentf-max-menu-items 15)
-(setq recentf-auto-cleanup 'mode)
 
 ;;; saveplace
 
@@ -409,6 +422,18 @@
 ;; Eliminate delay before highlighting search matches
 (setq lazy-highlight-initial-delay 0)
 
+;; Only affect leading indentation. This prevents destroying mid-line visual
+;; alignments, such as aligning variable assignments or trailing comments, by
+;; ensuring spaces in the middle of a line are never converted to tabs.
+(setq tabify-regexp (rx line-start (zero-or-more ?\t) ?\s (one-or-more blank)))
+
+;; Prevent Emacs filling commands (such as `fill-paragraph', `fill-region',
+;; `auto-fill-mode', and Evil's `gq' operator) from inserting line breaks inside
+;; text that is currently hidden via text properties. This prevents accidental
+;; corruption of folded outlines (e.g., in Org or Outline mode) and concealed
+;; markup (e.g., hidden Markdown URLs).
+(setq fill-nobreak-invisible t)
+
 ;;; Filetype
 
 ;; Do not notify the user each time Python tries to guess the indentation offset
@@ -461,7 +486,20 @@
 
 ;; Configure Ediff to use a single frame and split windows horizontally
 (setq ediff-window-setup-function 'ediff-setup-windows-plain
-      ediff-split-window-function 'split-window-horizontally)
+      ediff-split-window-function 'split-window-horizontally
+
+      ;; Ignore all whitespace differences (-w) to reduce visual noise from
+      ;; indentation changes or auto-formatters, keeping the focus on logic.
+      ediff-diff-options "-w"
+
+      ;; Skip over regions where the only differences are whitespace (or other
+      ;; ignored options) when navigating with 'n' and 'p'.
+      ediff-ignore-similar-regions t)
+
+;;; Diff
+
+;; Move +/- indicators to the fringe for cleaner diffs
+(setq diff-font-lock-prettify t)
 
 ;;; Help
 
@@ -586,7 +624,7 @@
 (setq minimal-emacs--success t)
 
 ;; Local variables:
-;; byte-compile-warnings: (not obsolete free-vars)
+;; byte-compile-warnings: (not free-vars)
 ;; End:
 
 ;;; init.el ends here

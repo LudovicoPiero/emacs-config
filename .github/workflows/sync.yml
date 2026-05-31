@@ -41,7 +41,7 @@ jobs:
             This allows you to review the changes before merging them into your config.
           branch: chore/sync-upstream
           delete-branch: true
-          base: main
+          base: second
           labels: |
             report
             automated pr

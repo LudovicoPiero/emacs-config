@@ -14,6 +14,7 @@
 (make-directory user-emacs-directory t)
 
 ;; -- Quality of Life --
+(setq native-comp-async-report-warnings-errors nil)
 ;; (setq use-short-answers t)
 ;; (setq use-dialog-box nil)
 ;; (setq ring-bell-function 'ignore)

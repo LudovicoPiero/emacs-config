@@ -9,7 +9,7 @@
   (my/apply-font))
 
 (use-package catppuccin-theme
-  :init
+  :config
   (setq catppuccin-flavor 'mocha)
   (load-theme 'catppuccin :no-confirm)
   :general

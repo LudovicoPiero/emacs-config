@@ -1,7 +1,7 @@
 ;;; pre-early-init.el --- Sane Defaults -*- lexical-binding: t; -*-
 
 ;; -- UTF-8 Everywhere --
-(set-language-environment "UTF-8")
+;; (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8)
 
 ;; Disable the default package.el init to prevent conflicts with Straight
@@ -14,11 +14,9 @@
 (make-directory user-emacs-directory t)
 
 ;; -- Quality of Life --
-(setq use-short-answers t)
-(setq use-dialog-box nil)
-(setq ring-bell-function 'ignore)
-(global-auto-revert-mode 1)
-(delete-selection-mode 1)
+;; (setq use-short-answers t)
+;; (setq use-dialog-box nil)
+;; (setq ring-bell-function 'ignore)
 
 ;; -- Dired Tweaks --
 (setq dired-listing-switches "-alh --group-directories-first")

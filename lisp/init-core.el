@@ -24,7 +24,11 @@
   ;; `recentf-save-list', allowing stale entries to be removed before the list
   ;; is saved by `recentf-save-list', which is automatically added to
   ;; `kill-emacs-hook' by `recentf-mode'.
-  (add-hook 'kill-emacs-hook #'recentf-cleanup -90))
+  (add-hook 'kill-emacs-hook #'recentf-cleanup -90)
+  (setq recentf-max-saved-items 300) ; default is 20
+  (setq recentf-max-menu-items 15)
+  (setq recentf-auto-cleanup 'mode)
+  (setq recentf-exclude nil))
 
 ;; savehist is an Emacs feature that preserves the minibuffer history between
 ;; sessions. It saves the history of inputs in the minibuffer, such as commands,
@@ -36,7 +40,9 @@
   :hook
   (after-init . savehist-mode)
   :custom
+  (history-length 300)
   (savehist-autosave-interval 600)
+  (savehist-save-minibuffer-history t)
   (savehist-additional-variables
    '(kill-ring                        ; clipboard
      register-alist                   ; macros
@@ -69,6 +75,8 @@
   :hook
   (after-init . global-auto-revert-mode)
   :custom
+  (revert-without-query (list "."))
+  (auto-revert-stop-on-user-input nil)
   (auto-revert-interval 3)
   (auto-revert-remote-files nil)
   (auto-revert-use-notify t)
@@ -94,15 +102,6 @@
   :general
   (general-def
     "C-c s" #'stripspace-cleanup))
-
-(use-package vundo
-  :commands (vundo)
-  :config (setq vundo-glyph-alist vundo-unicode-symbols)
-  :general
-  (general-def
-    "C-x u" #'vundo)
-  (my-leader-def
-    "u" #'vundo))
 
 (use-package multiple-cursors
   :commands (mc/mark-next-like-this mc/mark-previous-like-this mc/mark-all-like-this mc/edit-lines)
@@ -148,9 +147,9 @@
   (setq org-modern-table-horizontal 0.2)
   (setq org-modern-list '((43 . "➤") (45 . "–") (42 . "•")))
   (setq org-modern-todo-faces
-        '(("TODO" :inherit org-todo :color "#ff6c6b" :weight bold)
-          ("WAIT" :inherit org-todo :color "#98be65" :weight bold)
-          ("DONE" :inherit org-done :color "#51afef" :weight bold))))
+      '(("TODO" :inherit org-todo :foreground "#ff6c6b" :weight bold)
+        ("WAIT" :inherit org-todo :foreground "#98be65" :weight bold)
+        ("DONE" :inherit org-done :foreground "#51afef" :weight bold))))
 
 (use-package all-the-icons-dired
   :ensure t
@@ -161,6 +160,7 @@
   :ensure t
   :general
   (my-leader-def
+    "h"  '(:ignore t :which-key "help")
     "hc" '(helpful-command  :which-key "describe command")
     "hf" '(helpful-callable :which-key "describe function")
     "hv" '(helpful-variable :which-key "describe variable")

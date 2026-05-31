@@ -45,6 +45,8 @@
     "gsd" #'evil-surround-delete
     "gsr" #'evil-surround-change))
 
+(use-package restart-emacs)
+
 ;; -- ORPHAN GLOBAL KEYS --
 ;; Generic functionality that doesn't fit into specific modules
 (my-leader-def
@@ -61,8 +63,11 @@
   "f"   '(:ignore t :which-key "file")
   "ff"  #'find-file
   "fs"  #'save-buffer
-  "fc"  '((lambda () (interactive) (find-file (expand-file-name "init-keys.el" (concat user-emacs-directory "lisp/")))) :which-key "edit keys")
-  "fy"  #'(lambda () (interactive) (kill-new (buffer-file-name))) ; Yank file path
+  "fc" '((lambda () (interactive)
+         (find-file (expand-file-name "lisp/init-keys.el"
+                      minimal-emacs-user-directory)))
+        :which-key "edit keys")
+  "fy" '((lambda () (interactive) (kill-new (buffer-file-name))) :which-key "yank path")
 
   ;; --- b: BUFFERS (Generic) ---
   "b"   '(:ignore t :which-key "buffer")
@@ -70,8 +75,10 @@
   "br"  #'revert-buffer
   "bn"  #'next-buffer
   "bp"  #'previous-buffer
-  "bY"  #'(lambda () (interactive) (kill-new (buffer-name)))       ; Yank buffer name
+  "bY" '((lambda () (interactive) (kill-new (buffer-name))) :which-key "yank buffer name")
   "bB"  #'switch-to-buffer                                         ; Fallback switch
-  "bN"  #'make-empty-file-with-process-buffer)                     ; New empty buffer
+  "bN" '((lambda () (interactive)
+         (switch-to-buffer (generate-new-buffer "*new*")))
+        :which-key "new buffer")
 
 (provide 'init-keys)

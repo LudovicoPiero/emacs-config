@@ -1,6 +1,12 @@
 ;;; init-ui.el --- Visuals -*- lexical-binding: t; -*-
 
-(set-face-attribute 'default nil :font "Iosevka q SemiBold" :height 140)
+;; Setup the font for both GUI and daemon modes
+(defun my/apply-font (&optional frame)
+  (with-selected-frame (or frame (selected-frame))
+    (set-face-attribute 'default nil :font "Iosevka q SemiBold" :height 140)))
+(if (daemonp)
+    (add-hook 'after-make-frame-functions #'my/apply-font)
+  (my/apply-font))
 
 (use-package catppuccin-theme
   :init
@@ -35,6 +41,7 @@
 (global-display-line-numbers-mode t)
 (dolist (mode '(org-mode-hook
                 term-mode-hook
+                vterm-mode-hook
                 shell-mode-hook
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
@@ -44,7 +51,7 @@
 
 ;; Shows the actual color background for hex codes (e.g., #ffffff)
 (use-package rainbow-mode
-  :hook (prog-mode . rainbow-mode))
+  :hook ((css-mode sass-mode scss-mode web-mode nix-mode conf-mode) . rainbow-mode))
 
 ;; UI Toggles
 (my-leader-def

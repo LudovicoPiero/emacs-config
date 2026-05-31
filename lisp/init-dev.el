@@ -7,7 +7,8 @@
   :general
   (my-local-leader-def
     :keymaps 'nix-mode-map
-    "b" #'nix-build-buffer))
+    "b" #'nix-build
+    "f" #'nix-format-buffer))
 
 (use-package envrc
   :ensure t
@@ -20,12 +21,11 @@
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
 
-(use-package go-ts-mode
-  :ensure nil
-  :straight nil
+(use-package go-mode
+  :ensure t
   :general
   (my-local-leader-def
-    :keymaps 'go-ts-mode-map
+    :keymaps 'go-mode-map
     "t" #'go-test-current-test
     "r" #'go-run))
 
@@ -66,22 +66,22 @@
     "gd"  '(magit-diff-buffer-file :which-key "diff buffer")))
 
 (use-package corfu
-  :init
-  (global-corfu-mode)
-  (corfu-popupinfo-mode) ; Enable documentation popups
   :custom
-  (corfu-auto t)
-  (corfu-cycle t)
-  (corfu-quit-no-match nil)
-  (corfu-popupinfo-delay 0.2) ; Fast popup delay
-  (corfu-popupinfo-max-width 70)
+    (corfu-auto t)
+    (corfu-cycle t)
+    (corfu-quit-no-match nil)
+    (corfu-popupinfo-delay 0.2) ; Fast popup delay
+    (corfu-popupinfo-max-width 70)
+  :config
+    (global-corfu-mode)
+    (corfu-popupinfo-mode) ; Enable documentation popups
   :general
-  (general-def
-    :keymaps 'corfu-map
-    "TAB" #'corfu-next
-    [tab] #'corfu-next
-    "S-TAB" #'corfu-previous
-    [backtab] #'corfu-previous))
+    (general-def
+      :keymaps 'corfu-map
+      "TAB" #'corfu-next
+      [tab] #'corfu-next
+      "S-TAB" #'corfu-previous
+      [backtab] #'corfu-previous))
 
 ;; --- ICONS (Kind Icon) ---
 ;; Adds VSCode-like icons to the completion menu
@@ -103,14 +103,14 @@
 
 (use-package eglot
   :hook
-  ((nix-mode python-ts-mode go-ts-mode rust-ts-mode c++-ts-mode lua-mode js-ts-mode) . eglot-ensure)
+  ((nix-mode python-ts-mode go-mode rust-ts-mode c++-ts-mode lua-mode js-ts-mode) . eglot-ensure)
   :commands (eglot-rename eglot-code-actions eglot-format)
   :config
   ;; -- Server Configuration --
   (add-to-list 'eglot-server-programs '((python-mode python-ts-mode) . ("basedpyright-langserver" "--stdio")))
   (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
   (add-to-list 'eglot-server-programs '(lua-mode . ("emmylua-ls")))
-  (add-to-list 'eglot-server-programs '((go-mode go-ts-mode) . ("gopls")))
+  (add-to-list 'eglot-server-programs '(go-mode . ("gopls")))
   (add-to-list 'eglot-server-programs '((rust-mode rust-ts-mode) . ("rust-analyzer")))
   (add-to-list 'eglot-server-programs '((c++-mode c++-ts-mode) . ("clangd")))
 
@@ -145,7 +145,6 @@
   (eglot-booster-mode))
 
 (use-package apheleia
-  :commands (apheleia-format-buffer)
   :config
   (apheleia-global-mode +1)
   (setq apheleia-on-save nil)
@@ -178,7 +177,7 @@
   :hook ((dired-mode . diff-hl-dired-mode)
          (magit-pre-refresh . diff-hl-magit-pre-refresh)
          (magit-post-refresh . diff-hl-magit-post-refresh))
-  :init
+  :config
   (global-diff-hl-mode)
   ;; Show changes on the fly (don't wait for save)
   (diff-hl-flydiff-mode))
@@ -189,7 +188,7 @@
   :commands vterm
   :config
   (setq vterm-max-scrollback 10000)
-  (setq vterm-timer-delay nil))
+  (setq vterm-timer-delay 0.02))
 
 (use-package vterm-toggle
   :ensure t

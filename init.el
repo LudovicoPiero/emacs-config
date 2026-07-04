@@ -267,17 +267,27 @@
 (setq tramp-auto-save-directory
       (expand-file-name "tramp-autosave/" user-emacs-directory))
 
-(setq auto-save-file-name-transforms
-      `(("\\`/[^/]*:\\([^/]*/\\)*\\([^/]*\\)\\'"
-         ;; Redirect TRAMP (remote) file auto-saves to the local machine
-         ;; (prefixed with "tramp-") to prevent Emacs from hanging due to
-         ;; network latency during auto-save operations.
-         ,(file-name-concat auto-save-list-file-prefix "tramp-\\2-") sha1)
-        ("\\`/\\([^/]+/\\)*\\([^/]+\\)\\'"
-         ;; Redirect absolute file paths auto-saves to the
-         ;; `auto-save-list-file-prefix' directory. This appends the base
-         ;; filename to the prefix, avoiding #file.txt# files across the system.
-         ,(file-name-concat auto-save-list-file-prefix "\\2-") sha1)))
+(defun minimal-emacs-setup-auto-save-transforms ()
+  "Configure `auto-save-file-name-transforms' for local and remote files.
+This should be called after changing `auto-save-list-file-prefix'."
+  (setq auto-save-file-name-transforms
+        `(("\\`/[^/]*:\\([^/]*/\\)*\\([^/]*\\)\\'"
+           ;; Redirect TRAMP (remote) file auto-saves to the local machine
+           ;; (prefixed with "tramp-") to prevent Emacs from hanging due to
+           ;; network latency during auto-save operations.
+           ,(file-name-concat auto-save-list-file-prefix "tramp-\\2-") sha1)
+          ("\\`/\\([^/]+/\\)*\\([^/]+\\)\\'"
+           ;; Redirect absolute file paths auto-saves to the
+           ;; `auto-save-list-file-prefix' directory. This appends the base
+           ;; filename to the prefix, avoiding #file.txt# files across the system.
+           ,(file-name-concat auto-save-list-file-prefix "\\2-") sha1)))
+
+  (when (memq system-type '(windows-nt cygwin ms-dos))
+    (push `("\\`\\(/\\|[a-zA-Z]:/\\|//\\)\\([^/]+/\\)*\\([^/]+\\)\\'"
+            ,(file-name-concat auto-save-list-file-prefix "\\3-") sha1)
+          auto-save-file-name-transforms)))
+
+(minimal-emacs-setup-auto-save-transforms)
 
 ;; Ensure the directory for auto-save session logs exists with restricted
 ;; permissions.
@@ -287,11 +297,19 @@
       (with-file-modes #o700
         (make-directory auto-save-dir t)))))
 
-;; Auto save options
 (setq kill-buffer-delete-auto-save-files t)
 
 ;; Remove duplicates from the kill ring to reduce clutter
 (setq kill-do-not-save-duplicates t)
+
+;; Preserve the system clipboard before Emacs delete/kill operations.
+;;
+;; By default, deleting text in Emacs overwrites your system clipboard. For
+;; example, if you copy a link from a browser, switch to Emacs, and delete some
+;; text, your copied link is lost. This setting fixes that by pushing the
+;; clipboard contents into your paste history right before the deletion,
+;; ensuring external data remains retrievable via `yank-pop'.
+(setq save-interprogram-paste-before-kill t)
 
 ;;; Auto revert
 ;; Auto-revert in Emacs is a feature that automatically updates the contents of

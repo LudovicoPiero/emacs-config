@@ -52,6 +52,7 @@
 (if (boundp 'use-short-answers)
     (setq use-short-answers t)
   (advice-add 'yes-or-no-p :override #'y-or-n-p))
+(setq revert-buffer-quick-short-answers t)
 
 ;;; package.el
 
@@ -201,7 +202,7 @@
 
 ;;; comint (general command interpreter in a window)
 
-(setq ansi-color-for-comint-mode t
+(setq ansi-color-for-comint-mode t ; Renders native ANSI colors in the shell
       comint-prompt-read-only t
       comint-buffer-maximum-size 4096)
 

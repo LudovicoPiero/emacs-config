@@ -340,7 +340,7 @@ This should be called after changing `auto-save-list-file-prefix'."
 ;;; recentf
 
 ;; `recentf' is an that maintains a list of recently accessed files.
-(setq recentf-max-saved-items 300 ; default is 20
+(setq recentf-max-saved-items 210
       recentf-max-menu-items 15)
 
 ;;; saveplace
@@ -561,6 +561,7 @@ This should be called after changing `auto-save-list-file-prefix'."
  help-enable-completion-autoload nil
  help-enable-autoload nil
  help-enable-symbol-autoload nil
+ help-clean-buttons t
  help-window-select t)  ;; Focus new help windows when opened
 
 ;;; Eglot
